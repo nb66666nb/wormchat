@@ -1,0 +1,973 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetchat.mappers.BotUserProfileMapper">
+
+	<!--实体映射-->
+	<resultMap id="base_result_map" type="com.meetchat.entity.po.BotUserProfile">
+		<!---->
+		<id column="id" property="id"  />
+		<!---->
+		<result column="user_id" property="userId"  />
+		<!---->
+		<result column="bot_id" property="botId"  />
+		<!---->
+		<result column="preferred_language" property="preferredLanguage"  />
+		<!---->
+		<result column="communication_style" property="communicationStyle"  />
+		<!---->
+		<result column="preferred_response_length" property="preferredResponseLength"  />
+		<!--兴趣偏好-->
+		<result column="interests" property="interests"  />
+		<!--关键事实-->
+		<result column="key_facts" property="keyFacts"  />
+		<!---->
+		<result column="emotion_baseline" property="emotionBaseline"  />
+		<!--情绪日志-->
+		<result column="emotion_journal" property="emotionJournal"  />
+		<!---->
+		<result column="stress_level" property="stressLevel"  />
+		<!---->
+		<result column="loneliness_level" property="lonelinessLevel"  />
+		<!---->
+		<result column="support_preference" property="supportPreference"  />
+		<!---->
+		<result column="relationship_level" property="relationshipLevel"  />
+		<!---->
+		<result column="relationship_trust" property="relationshipTrust"  />
+		<!---->
+		<result column="interaction_count" property="interactionCount"  />
+		<!---->
+		<result column="total_chat_duration" property="totalChatDuration"  />
+		<!---->
+		<result column="last_mood_check_time" property="lastMoodCheckTime"  />
+		<!---->
+		<result column="consecutive_negative_days" property="consecutiveNegativeDays"  />
+		<!---->
+		<result column="crisis_flag" property="crisisFlag"  />
+		<!--关怀计划-->
+		<result column="care_plan" property="carePlan"  />
+		<!---->
+		<result column="last_interaction_time" property="lastInteractionTime"  />
+		<!---->
+		<result column="create_time" property="createTime"  />
+		<!---->
+		<result column="update_time" property="updateTime"  />
+	</resultMap>
+
+
+	<!-- 通用查询结果列-->
+	<sql id="base_column_list">
+		 b.id,b.user_id,b.bot_id,b.preferred_language,b.communication_style,
+		 b.preferred_response_length,b.interests,b.key_facts,b.emotion_baseline,b.emotion_journal,
+		 b.stress_level,b.loneliness_level,b.support_preference,b.relationship_level,b.relationship_trust,
+		 b.interaction_count,b.total_chat_duration,b.last_mood_check_time,b.consecutive_negative_days,b.crisis_flag,
+		 b.care_plan,b.last_interaction_time,b.create_time,b.update_time
+	</sql>
+
+	<sql id="base_condition_filed">
+			<if test="query.id != null">
+				 and  b.id = #{query.id}
+			</if>
+			<if test="query.userId != null and query.userId!=''">
+				 and  b.user_id = #{query.userId}
+			</if>
+			<if test="query.botId != null and query.botId!=''">
+				 and  b.bot_id = #{query.botId}
+			</if>
+			<if test="query.preferredLanguage != null and query.preferredLanguage!=''">
+				 and  b.preferred_language = #{query.preferredLanguage}
+			</if>
+			<if test="query.communicationStyle != null and query.communicationStyle!=''">
+				 and  b.communication_style = #{query.communicationStyle}
+			</if>
+			<if test="query.preferredResponseLength != null and query.preferredResponseLength!=''">
+				 and  b.preferred_response_length = #{query.preferredResponseLength}
+			</if>
+			<if test="query.interests != null and query.interests!=''">
+				 and  b.interests = #{query.interests}
+			</if>
+			<if test="query.keyFacts != null and query.keyFacts!=''">
+				 and  b.key_facts = #{query.keyFacts}
+			</if>
+			<if test="query.emotionBaseline != null and query.emotionBaseline!=''">
+				 and  b.emotion_baseline = #{query.emotionBaseline}
+			</if>
+			<if test="query.emotionJournal != null and query.emotionJournal!=''">
+				 and  b.emotion_journal = #{query.emotionJournal}
+			</if>
+			<if test="query.stressLevel != null">
+				 and  b.stress_level = #{query.stressLevel}
+			</if>
+			<if test="query.lonelinessLevel != null">
+				 and  b.loneliness_level = #{query.lonelinessLevel}
+			</if>
+			<if test="query.supportPreference != null and query.supportPreference!=''">
+				 and  b.support_preference = #{query.supportPreference}
+			</if>
+			<if test="query.relationshipLevel != null">
+				 and  b.relationship_level = #{query.relationshipLevel}
+			</if>
+			<if test="query.relationshipTrust != null">
+				 and  b.relationship_trust = #{query.relationshipTrust}
+			</if>
+			<if test="query.interactionCount != null">
+				 and  b.interaction_count = #{query.interactionCount}
+			</if>
+			<if test="query.totalChatDuration != null">
+				 and  b.total_chat_duration = #{query.totalChatDuration}
+			</if>
+			<if test="query.lastMoodCheckTime != null">
+				 and  b.last_mood_check_time = #{query.lastMoodCheckTime}
+			</if>
+			<if test="query.consecutiveNegativeDays != null">
+				 and  b.consecutive_negative_days = #{query.consecutiveNegativeDays}
+			</if>
+			<if test="query.crisisFlag != null">
+				 and  b.crisis_flag = #{query.crisisFlag}
+			</if>
+			<if test="query.carePlan != null and query.carePlan!=''">
+				 and  b.care_plan = #{query.carePlan}
+			</if>
+			<if test="query.lastInteractionTime != null">
+				 and  b.last_interaction_time = #{query.lastInteractionTime}
+			</if>
+			<if test="query.createTime != null and query.createTime!=''">
+				 <![CDATA[ and  b.create_time=str_to_date(#{query.createTime}, '%Y-%m-%d') ]]>
+			</if>
+			<if test="query.updateTime != null and query.updateTime!=''">
+				 <![CDATA[ and  b.update_time=str_to_date(#{query.updateTime}, '%Y-%m-%d') ]]>
+			</if>
+	</sql>
+
+	<!-- 通用查询条件列-->
+	<sql id="query_condition">
+	 <where>
+			<include refid="base_condition_filed" />
+			<if test="query.userIdFuzzy!= null  and query.userIdFuzzy!=''">
+				 and  b.user_id like concat('%', #{query.userIdFuzzy}, '%')
+			</if>
+			<if test="query.botIdFuzzy!= null  and query.botIdFuzzy!=''">
+				 and  b.bot_id like concat('%', #{query.botIdFuzzy}, '%')
+			</if>
+			<if test="query.preferredLanguageFuzzy!= null  and query.preferredLanguageFuzzy!=''">
+				 and  b.preferred_language like concat('%', #{query.preferredLanguageFuzzy}, '%')
+			</if>
+			<if test="query.communicationStyleFuzzy!= null  and query.communicationStyleFuzzy!=''">
+				 and  b.communication_style like concat('%', #{query.communicationStyleFuzzy}, '%')
+			</if>
+			<if test="query.preferredResponseLengthFuzzy!= null  and query.preferredResponseLengthFuzzy!=''">
+				 and  b.preferred_response_length like concat('%', #{query.preferredResponseLengthFuzzy}, '%')
+			</if>
+			<if test="query.interestsFuzzy!= null  and query.interestsFuzzy!=''">
+				 and  b.interests like concat('%', #{query.interestsFuzzy}, '%')
+			</if>
+			<if test="query.keyFactsFuzzy!= null  and query.keyFactsFuzzy!=''">
+				 and  b.key_facts like concat('%', #{query.keyFactsFuzzy}, '%')
+			</if>
+			<if test="query.emotionBaselineFuzzy!= null  and query.emotionBaselineFuzzy!=''">
+				 and  b.emotion_baseline like concat('%', #{query.emotionBaselineFuzzy}, '%')
+			</if>
+			<if test="query.emotionJournalFuzzy!= null  and query.emotionJournalFuzzy!=''">
+				 and  b.emotion_journal like concat('%', #{query.emotionJournalFuzzy}, '%')
+			</if>
+			<if test="query.supportPreferenceFuzzy!= null  and query.supportPreferenceFuzzy!=''">
+				 and  b.support_preference like concat('%', #{query.supportPreferenceFuzzy}, '%')
+			</if>
+			<if test="query.carePlanFuzzy!= null  and query.carePlanFuzzy!=''">
+				 and  b.care_plan like concat('%', #{query.carePlanFuzzy}, '%')
+			</if>
+			<if test="query.createTimeStart!= null and query.createTimeStart!=''">
+				 <![CDATA[ and  b.create_time>=str_to_date(#{query.createTimeStart}, '%Y-%m-%d') ]]>
+			</if>
+			<if test="query.createTimeEnd!= null and query.createTimeEnd!=''">
+				 <![CDATA[ and  b.create_time< date_sub(str_to_date(#{query.createTimeEnd},'%Y-%m-%d'),interval -1 day) ]]>
+			</if>
+			<if test="query.updateTimeStart!= null and query.updateTimeStart!=''">
+				 <![CDATA[ and  b.update_time>=str_to_date(#{query.updateTimeStart}, '%Y-%m-%d') ]]>
+			</if>
+			<if test="query.updateTimeEnd!= null and query.updateTimeEnd!=''">
+				 <![CDATA[ and  b.update_time< date_sub(str_to_date(#{query.updateTimeEnd},'%Y-%m-%d'),interval -1 day) ]]>
+			</if>
+	 </where>
+	</sql>
+
+	<!-- 查询集合-->
+	<select id="selectList" resultMap="base_result_map" >
+		 SELECT <include refid="base_column_list" /> FROM bot_user_profile b <include refid="query_condition" />
+		 <if test="query.orderBy!=null">
+			 order by ${query.orderBy}
+		 </if>
+		 <if test="query.simplePage!=null">
+			 limit #{query.simplePage.start},#{query.simplePage.end}
+		 </if>
+	</select>
+
+	<!-- 查询数量-->
+	<select id="selectCount" resultType="java.lang.Integer" >
+		 SELECT count(1) FROM bot_user_profile b <include refid="query_condition" />
+	</select>
+
+	<!-- 插入 （匹配有值的字段）-->
+	<insert id="insert" parameterType="com.meetchat.entity.po.BotUserProfile">
+		<selectKey keyProperty="bean.id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		 INSERT INTO bot_user_profile
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="bean.userId != null">
+				 user_id,
+			</if>
+			<if test="bean.botId != null">
+				 bot_id,
+			</if>
+			<if test="bean.preferredLanguage != null">
+				 preferred_language,
+			</if>
+			<if test="bean.communicationStyle != null">
+				 communication_style,
+			</if>
+			<if test="bean.preferredResponseLength != null">
+				 preferred_response_length,
+			</if>
+			<if test="bean.interests != null">
+				 interests,
+			</if>
+			<if test="bean.keyFacts != null">
+				 key_facts,
+			</if>
+			<if test="bean.emotionBaseline != null">
+				 emotion_baseline,
+			</if>
+			<if test="bean.emotionJournal != null">
+				 emotion_journal,
+			</if>
+			<if test="bean.stressLevel != null">
+				 stress_level,
+			</if>
+			<if test="bean.lonelinessLevel != null">
+				 loneliness_level,
+			</if>
+			<if test="bean.supportPreference != null">
+				 support_preference,
+			</if>
+			<if test="bean.relationshipLevel != null">
+				 relationship_level,
+			</if>
+			<if test="bean.relationshipTrust != null">
+				 relationship_trust,
+			</if>
+			<if test="bean.interactionCount != null">
+				 interaction_count,
+			</if>
+			<if test="bean.totalChatDuration != null">
+				 total_chat_duration,
+			</if>
+			<if test="bean.lastMoodCheckTime != null">
+				 last_mood_check_time,
+			</if>
+			<if test="bean.consecutiveNegativeDays != null">
+				 consecutive_negative_days,
+			</if>
+			<if test="bean.crisisFlag != null">
+				 crisis_flag,
+			</if>
+			<if test="bean.carePlan != null">
+				 care_plan,
+			</if>
+			<if test="bean.lastInteractionTime != null">
+				 last_interaction_time,
+			</if>
+			<if test="bean.createTime != null">
+				 create_time,
+			</if>
+			<if test="bean.updateTime != null">
+				 update_time,
+			</if>
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="bean.userId!=null">
+				 #{bean.userId},
+			</if>
+			<if test="bean.botId!=null">
+				 #{bean.botId},
+			</if>
+			<if test="bean.preferredLanguage!=null">
+				 #{bean.preferredLanguage},
+			</if>
+			<if test="bean.communicationStyle!=null">
+				 #{bean.communicationStyle},
+			</if>
+			<if test="bean.preferredResponseLength!=null">
+				 #{bean.preferredResponseLength},
+			</if>
+			<if test="bean.interests!=null">
+				 #{bean.interests},
+			</if>
+			<if test="bean.keyFacts!=null">
+				 #{bean.keyFacts},
+			</if>
+			<if test="bean.emotionBaseline!=null">
+				 #{bean.emotionBaseline},
+			</if>
+			<if test="bean.emotionJournal!=null">
+				 #{bean.emotionJournal},
+			</if>
+			<if test="bean.stressLevel!=null">
+				 #{bean.stressLevel},
+			</if>
+			<if test="bean.lonelinessLevel!=null">
+				 #{bean.lonelinessLevel},
+			</if>
+			<if test="bean.supportPreference!=null">
+				 #{bean.supportPreference},
+			</if>
+			<if test="bean.relationshipLevel!=null">
+				 #{bean.relationshipLevel},
+			</if>
+			<if test="bean.relationshipTrust!=null">
+				 #{bean.relationshipTrust},
+			</if>
+			<if test="bean.interactionCount!=null">
+				 #{bean.interactionCount},
+			</if>
+			<if test="bean.totalChatDuration!=null">
+				 #{bean.totalChatDuration},
+			</if>
+			<if test="bean.lastMoodCheckTime!=null">
+				 #{bean.lastMoodCheckTime},
+			</if>
+			<if test="bean.consecutiveNegativeDays!=null">
+				 #{bean.consecutiveNegativeDays},
+			</if>
+			<if test="bean.crisisFlag!=null">
+				 #{bean.crisisFlag},
+			</if>
+			<if test="bean.carePlan!=null">
+				 #{bean.carePlan},
+			</if>
+			<if test="bean.lastInteractionTime!=null">
+				 #{bean.lastInteractionTime},
+			</if>
+			<if test="bean.createTime!=null">
+				 #{bean.createTime},
+			</if>
+			<if test="bean.updateTime!=null">
+				 #{bean.updateTime},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段）-->
+	<insert id="insertOrUpdate" parameterType="com.meetchat.entity.po.BotUserProfile">
+		 INSERT INTO bot_user_profile
+		 <trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				 id,
+			</if>
+			<if test="bean.userId != null">
+				 user_id,
+			</if>
+			<if test="bean.botId != null">
+				 bot_id,
+			</if>
+			<if test="bean.preferredLanguage != null">
+				 preferred_language,
+			</if>
+			<if test="bean.communicationStyle != null">
+				 communication_style,
+			</if>
+			<if test="bean.preferredResponseLength != null">
+				 preferred_response_length,
+			</if>
+			<if test="bean.interests != null">
+				 interests,
+			</if>
+			<if test="bean.keyFacts != null">
+				 key_facts,
+			</if>
+			<if test="bean.emotionBaseline != null">
+				 emotion_baseline,
+			</if>
+			<if test="bean.emotionJournal != null">
+				 emotion_journal,
+			</if>
+			<if test="bean.stressLevel != null">
+				 stress_level,
+			</if>
+			<if test="bean.lonelinessLevel != null">
+				 loneliness_level,
+			</if>
+			<if test="bean.supportPreference != null">
+				 support_preference,
+			</if>
+			<if test="bean.relationshipLevel != null">
+				 relationship_level,
+			</if>
+			<if test="bean.relationshipTrust != null">
+				 relationship_trust,
+			</if>
+			<if test="bean.interactionCount != null">
+				 interaction_count,
+			</if>
+			<if test="bean.totalChatDuration != null">
+				 total_chat_duration,
+			</if>
+			<if test="bean.lastMoodCheckTime != null">
+				 last_mood_check_time,
+			</if>
+			<if test="bean.consecutiveNegativeDays != null">
+				 consecutive_negative_days,
+			</if>
+			<if test="bean.crisisFlag != null">
+				 crisis_flag,
+			</if>
+			<if test="bean.carePlan != null">
+				 care_plan,
+			</if>
+			<if test="bean.lastInteractionTime != null">
+				 last_interaction_time,
+			</if>
+			<if test="bean.createTime != null">
+				 create_time,
+			</if>
+			<if test="bean.updateTime != null">
+				 update_time,
+			</if>
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.id!=null">
+				 #{bean.id},
+			</if>
+			<if test="bean.userId!=null">
+				 #{bean.userId},
+			</if>
+			<if test="bean.botId!=null">
+				 #{bean.botId},
+			</if>
+			<if test="bean.preferredLanguage!=null">
+				 #{bean.preferredLanguage},
+			</if>
+			<if test="bean.communicationStyle!=null">
+				 #{bean.communicationStyle},
+			</if>
+			<if test="bean.preferredResponseLength!=null">
+				 #{bean.preferredResponseLength},
+			</if>
+			<if test="bean.interests!=null">
+				 #{bean.interests},
+			</if>
+			<if test="bean.keyFacts!=null">
+				 #{bean.keyFacts},
+			</if>
+			<if test="bean.emotionBaseline!=null">
+				 #{bean.emotionBaseline},
+			</if>
+			<if test="bean.emotionJournal!=null">
+				 #{bean.emotionJournal},
+			</if>
+			<if test="bean.stressLevel!=null">
+				 #{bean.stressLevel},
+			</if>
+			<if test="bean.lonelinessLevel!=null">
+				 #{bean.lonelinessLevel},
+			</if>
+			<if test="bean.supportPreference!=null">
+				 #{bean.supportPreference},
+			</if>
+			<if test="bean.relationshipLevel!=null">
+				 #{bean.relationshipLevel},
+			</if>
+			<if test="bean.relationshipTrust!=null">
+				 #{bean.relationshipTrust},
+			</if>
+			<if test="bean.interactionCount!=null">
+				 #{bean.interactionCount},
+			</if>
+			<if test="bean.totalChatDuration!=null">
+				 #{bean.totalChatDuration},
+			</if>
+			<if test="bean.lastMoodCheckTime!=null">
+				 #{bean.lastMoodCheckTime},
+			</if>
+			<if test="bean.consecutiveNegativeDays!=null">
+				 #{bean.consecutiveNegativeDays},
+			</if>
+			<if test="bean.crisisFlag!=null">
+				 #{bean.crisisFlag},
+			</if>
+			<if test="bean.carePlan!=null">
+				 #{bean.carePlan},
+			</if>
+			<if test="bean.lastInteractionTime!=null">
+				 #{bean.lastInteractionTime},
+			</if>
+			<if test="bean.createTime!=null">
+				 #{bean.createTime},
+			</if>
+			<if test="bean.updateTime!=null">
+				 #{bean.updateTime},
+			</if>
+		 </trim>
+		 on DUPLICATE key update 
+		 <trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.userId!=null">
+				 user_id = VALUES(user_id),
+			</if>
+			<if test="bean.botId!=null">
+				 bot_id = VALUES(bot_id),
+			</if>
+			<if test="bean.preferredLanguage!=null">
+				 preferred_language = VALUES(preferred_language),
+			</if>
+			<if test="bean.communicationStyle!=null">
+				 communication_style = VALUES(communication_style),
+			</if>
+			<if test="bean.preferredResponseLength!=null">
+				 preferred_response_length = VALUES(preferred_response_length),
+			</if>
+			<if test="bean.interests!=null">
+				 interests = VALUES(interests),
+			</if>
+			<if test="bean.keyFacts!=null">
+				 key_facts = VALUES(key_facts),
+			</if>
+			<if test="bean.emotionBaseline!=null">
+				 emotion_baseline = VALUES(emotion_baseline),
+			</if>
+			<if test="bean.emotionJournal!=null">
+				 emotion_journal = VALUES(emotion_journal),
+			</if>
+			<if test="bean.stressLevel!=null">
+				 stress_level = VALUES(stress_level),
+			</if>
+			<if test="bean.lonelinessLevel!=null">
+				 loneliness_level = VALUES(loneliness_level),
+			</if>
+			<if test="bean.supportPreference!=null">
+				 support_preference = VALUES(support_preference),
+			</if>
+			<if test="bean.relationshipLevel!=null">
+				 relationship_level = VALUES(relationship_level),
+			</if>
+			<if test="bean.relationshipTrust!=null">
+				 relationship_trust = VALUES(relationship_trust),
+			</if>
+			<if test="bean.interactionCount!=null">
+				 interaction_count = VALUES(interaction_count),
+			</if>
+			<if test="bean.totalChatDuration!=null">
+				 total_chat_duration = VALUES(total_chat_duration),
+			</if>
+			<if test="bean.lastMoodCheckTime!=null">
+				 last_mood_check_time = VALUES(last_mood_check_time),
+			</if>
+			<if test="bean.consecutiveNegativeDays!=null">
+				 consecutive_negative_days = VALUES(consecutive_negative_days),
+			</if>
+			<if test="bean.crisisFlag!=null">
+				 crisis_flag = VALUES(crisis_flag),
+			</if>
+			<if test="bean.carePlan!=null">
+				 care_plan = VALUES(care_plan),
+			</if>
+			<if test="bean.lastInteractionTime!=null">
+				 last_interaction_time = VALUES(last_interaction_time),
+			</if>
+			<if test="bean.createTime!=null">
+				 create_time = VALUES(create_time),
+			</if>
+			<if test="bean.updateTime!=null">
+				 update_time = VALUES(update_time),
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 添加 （批量插入）-->
+	<insert id="insertBatch" parameterType="com.meetchat.entity.po.BotUserProfile" useGeneratedKeys="true" keyProperty="id">
+		 INSERT INTO bot_user_profile(
+			 user_id,
+			 bot_id,
+			 preferred_language,
+			 communication_style,
+			 preferred_response_length,
+			 interests,
+			 key_facts,
+			 emotion_baseline,
+			 emotion_journal,
+			 stress_level,
+			 loneliness_level,
+			 support_preference,
+			 relationship_level,
+			 relationship_trust,
+			 interaction_count,
+			 total_chat_duration,
+			 last_mood_check_time,
+			 consecutive_negative_days,
+			 crisis_flag,
+			 care_plan,
+			 last_interaction_time,
+			 create_time,
+			 update_time
+		 )values
+		 <foreach collection="list" item="item" separator=",">
+			 (
+				 #{item.userId},
+				 #{item.botId},
+				 #{item.preferredLanguage},
+				 #{item.communicationStyle},
+				 #{item.preferredResponseLength},
+				 #{item.interests},
+				 #{item.keyFacts},
+				 #{item.emotionBaseline},
+				 #{item.emotionJournal},
+				 #{item.stressLevel},
+				 #{item.lonelinessLevel},
+				 #{item.supportPreference},
+				 #{item.relationshipLevel},
+				 #{item.relationshipTrust},
+				 #{item.interactionCount},
+				 #{item.totalChatDuration},
+				 #{item.lastMoodCheckTime},
+				 #{item.consecutiveNegativeDays},
+				 #{item.crisisFlag},
+				 #{item.carePlan},
+				 #{item.lastInteractionTime},
+				 #{item.createTime},
+				 #{item.updateTime}
+			 )
+		 </foreach>
+	</insert>
+
+	<!-- 批量新增修改 （批量插入）-->
+	<insert id="insertOrUpdateBatch" parameterType="com.meetchat.entity.po.BotUserProfile">
+		 INSERT INTO bot_user_profile(
+			 user_id,
+			 bot_id,
+			 preferred_language,
+			 communication_style,
+			 preferred_response_length,
+			 interests,
+			 key_facts,
+			 emotion_baseline,
+			 emotion_journal,
+			 stress_level,
+			 loneliness_level,
+			 support_preference,
+			 relationship_level,
+			 relationship_trust,
+			 interaction_count,
+			 total_chat_duration,
+			 last_mood_check_time,
+			 consecutive_negative_days,
+			 crisis_flag,
+			 care_plan,
+			 last_interaction_time,
+			 create_time,
+			 update_time
+		 )values
+		 <foreach collection="list" item="item" separator=",">
+			 (
+				 #{item.userId},
+				 #{item.botId},
+				 #{item.preferredLanguage},
+				 #{item.communicationStyle},
+				 #{item.preferredResponseLength},
+				 #{item.interests},
+				 #{item.keyFacts},
+				 #{item.emotionBaseline},
+				 #{item.emotionJournal},
+				 #{item.stressLevel},
+				 #{item.lonelinessLevel},
+				 #{item.supportPreference},
+				 #{item.relationshipLevel},
+				 #{item.relationshipTrust},
+				 #{item.interactionCount},
+				 #{item.totalChatDuration},
+				 #{item.lastMoodCheckTime},
+				 #{item.consecutiveNegativeDays},
+				 #{item.crisisFlag},
+				 #{item.carePlan},
+				 #{item.lastInteractionTime},
+				 #{item.createTime},
+				 #{item.updateTime}
+			 )
+		 </foreach>
+			on DUPLICATE key update 
+			user_id = VALUES(user_id),
+			bot_id = VALUES(bot_id),
+			preferred_language = VALUES(preferred_language),
+			communication_style = VALUES(communication_style),
+			preferred_response_length = VALUES(preferred_response_length),
+			interests = VALUES(interests),
+			key_facts = VALUES(key_facts),
+			emotion_baseline = VALUES(emotion_baseline),
+			emotion_journal = VALUES(emotion_journal),
+			stress_level = VALUES(stress_level),
+			loneliness_level = VALUES(loneliness_level),
+			support_preference = VALUES(support_preference),
+			relationship_level = VALUES(relationship_level),
+			relationship_trust = VALUES(relationship_trust),
+			interaction_count = VALUES(interaction_count),
+			total_chat_duration = VALUES(total_chat_duration),
+			last_mood_check_time = VALUES(last_mood_check_time),
+			consecutive_negative_days = VALUES(consecutive_negative_days),
+			crisis_flag = VALUES(crisis_flag),
+			care_plan = VALUES(care_plan),
+			last_interaction_time = VALUES(last_interaction_time),
+			create_time = VALUES(create_time),
+			update_time = VALUES(update_time)
+	</insert>
+
+	<!--多条件修改-->
+	<update id="updateByParam" parameterType="com.meetchat.entity.query.BotUserProfileQuery">
+		 UPDATE bot_user_profile b
+ 		 <set> 
+			<if test="bean.userId != null">
+				 user_id = #{bean.userId},
+			</if>
+			<if test="bean.botId != null">
+				 bot_id = #{bean.botId},
+			</if>
+			<if test="bean.preferredLanguage != null">
+				 preferred_language = #{bean.preferredLanguage},
+			</if>
+			<if test="bean.communicationStyle != null">
+				 communication_style = #{bean.communicationStyle},
+			</if>
+			<if test="bean.preferredResponseLength != null">
+				 preferred_response_length = #{bean.preferredResponseLength},
+			</if>
+			<if test="bean.interests != null">
+				 interests = #{bean.interests},
+			</if>
+			<if test="bean.keyFacts != null">
+				 key_facts = #{bean.keyFacts},
+			</if>
+			<if test="bean.emotionBaseline != null">
+				 emotion_baseline = #{bean.emotionBaseline},
+			</if>
+			<if test="bean.emotionJournal != null">
+				 emotion_journal = #{bean.emotionJournal},
+			</if>
+			<if test="bean.stressLevel != null">
+				 stress_level = #{bean.stressLevel},
+			</if>
+			<if test="bean.lonelinessLevel != null">
+				 loneliness_level = #{bean.lonelinessLevel},
+			</if>
+			<if test="bean.supportPreference != null">
+				 support_preference = #{bean.supportPreference},
+			</if>
+			<if test="bean.relationshipLevel != null">
+				 relationship_level = #{bean.relationshipLevel},
+			</if>
+			<if test="bean.relationshipTrust != null">
+				 relationship_trust = #{bean.relationshipTrust},
+			</if>
+			<if test="bean.interactionCount != null">
+				 interaction_count = #{bean.interactionCount},
+			</if>
+			<if test="bean.totalChatDuration != null">
+				 total_chat_duration = #{bean.totalChatDuration},
+			</if>
+			<if test="bean.lastMoodCheckTime != null">
+				 last_mood_check_time = #{bean.lastMoodCheckTime},
+			</if>
+			<if test="bean.consecutiveNegativeDays != null">
+				 consecutive_negative_days = #{bean.consecutiveNegativeDays},
+			</if>
+			<if test="bean.crisisFlag != null">
+				 crisis_flag = #{bean.crisisFlag},
+			</if>
+			<if test="bean.carePlan != null">
+				 care_plan = #{bean.carePlan},
+			</if>
+			<if test="bean.lastInteractionTime != null">
+				 last_interaction_time = #{bean.lastInteractionTime},
+			</if>
+			<if test="bean.createTime != null">
+				 create_time = #{bean.createTime},
+			</if>
+			<if test="bean.updateTime != null">
+				 update_time = #{bean.updateTime},
+			</if>
+ 		 </set>
+ 		 <include refid="query_condition" />
+	</update>
+
+	<!--多条件删除-->
+	<delete id="deleteByParam">
+		 delete b from bot_user_profile b
+ 		 <include refid="query_condition" />
+	</delete>
+
+	<!-- 根据Id修改-->
+	<update id="updateById" parameterType="com.meetchat.entity.po.BotUserProfile">
+		 UPDATE bot_user_profile
+ 		 <set> 
+			<if test="bean.userId != null">
+				 user_id = #{bean.userId},
+			</if>
+			<if test="bean.botId != null">
+				 bot_id = #{bean.botId},
+			</if>
+			<if test="bean.preferredLanguage != null">
+				 preferred_language = #{bean.preferredLanguage},
+			</if>
+			<if test="bean.communicationStyle != null">
+				 communication_style = #{bean.communicationStyle},
+			</if>
+			<if test="bean.preferredResponseLength != null">
+				 preferred_response_length = #{bean.preferredResponseLength},
+			</if>
+			<if test="bean.interests != null">
+				 interests = #{bean.interests},
+			</if>
+			<if test="bean.keyFacts != null">
+				 key_facts = #{bean.keyFacts},
+			</if>
+			<if test="bean.emotionBaseline != null">
+				 emotion_baseline = #{bean.emotionBaseline},
+			</if>
+			<if test="bean.emotionJournal != null">
+				 emotion_journal = #{bean.emotionJournal},
+			</if>
+			<if test="bean.stressLevel != null">
+				 stress_level = #{bean.stressLevel},
+			</if>
+			<if test="bean.lonelinessLevel != null">
+				 loneliness_level = #{bean.lonelinessLevel},
+			</if>
+			<if test="bean.supportPreference != null">
+				 support_preference = #{bean.supportPreference},
+			</if>
+			<if test="bean.relationshipLevel != null">
+				 relationship_level = #{bean.relationshipLevel},
+			</if>
+			<if test="bean.relationshipTrust != null">
+				 relationship_trust = #{bean.relationshipTrust},
+			</if>
+			<if test="bean.interactionCount != null">
+				 interaction_count = #{bean.interactionCount},
+			</if>
+			<if test="bean.totalChatDuration != null">
+				 total_chat_duration = #{bean.totalChatDuration},
+			</if>
+			<if test="bean.lastMoodCheckTime != null">
+				 last_mood_check_time = #{bean.lastMoodCheckTime},
+			</if>
+			<if test="bean.consecutiveNegativeDays != null">
+				 consecutive_negative_days = #{bean.consecutiveNegativeDays},
+			</if>
+			<if test="bean.crisisFlag != null">
+				 crisis_flag = #{bean.crisisFlag},
+			</if>
+			<if test="bean.carePlan != null">
+				 care_plan = #{bean.carePlan},
+			</if>
+			<if test="bean.lastInteractionTime != null">
+				 last_interaction_time = #{bean.lastInteractionTime},
+			</if>
+			<if test="bean.createTime != null">
+				 create_time = #{bean.createTime},
+			</if>
+			<if test="bean.updateTime != null">
+				 update_time = #{bean.updateTime},
+			</if>
+ 		 </set>
+ 		 where id=#{id}
+	</update>
+
+	<!-- 根据Id删除-->
+	<delete id="deleteById">
+		delete from bot_user_profile where id=#{id}
+	</delete>
+
+	<!-- 根据PrimaryKey获取对象-->
+	<select id="selectById" resultMap="base_result_map" >
+		select <include refid="base_column_list" /> from bot_user_profile b where id=#{id}
+	</select>
+
+	<!-- 根据UserIdAndBotId修改-->
+	<update id="updateByUserIdAndBotId" parameterType="com.meetchat.entity.po.BotUserProfile">
+		 UPDATE bot_user_profile
+ 		 <set> 
+			<if test="bean.preferredLanguage != null">
+				 preferred_language = #{bean.preferredLanguage},
+			</if>
+			<if test="bean.communicationStyle != null">
+				 communication_style = #{bean.communicationStyle},
+			</if>
+			<if test="bean.preferredResponseLength != null">
+				 preferred_response_length = #{bean.preferredResponseLength},
+			</if>
+			<if test="bean.interests != null">
+				 interests = #{bean.interests},
+			</if>
+			<if test="bean.keyFacts != null">
+				 key_facts = #{bean.keyFacts},
+			</if>
+			<if test="bean.emotionBaseline != null">
+				 emotion_baseline = #{bean.emotionBaseline},
+			</if>
+			<if test="bean.emotionJournal != null">
+				 emotion_journal = #{bean.emotionJournal},
+			</if>
+			<if test="bean.stressLevel != null">
+				 stress_level = #{bean.stressLevel},
+			</if>
+			<if test="bean.lonelinessLevel != null">
+				 loneliness_level = #{bean.lonelinessLevel},
+			</if>
+			<if test="bean.supportPreference != null">
+				 support_preference = #{bean.supportPreference},
+			</if>
+			<if test="bean.relationshipLevel != null">
+				 relationship_level = #{bean.relationshipLevel},
+			</if>
+			<if test="bean.relationshipTrust != null">
+				 relationship_trust = #{bean.relationshipTrust},
+			</if>
+			<if test="bean.interactionCount != null">
+				 interaction_count = #{bean.interactionCount},
+			</if>
+			<if test="bean.totalChatDuration != null">
+				 total_chat_duration = #{bean.totalChatDuration},
+			</if>
+			<if test="bean.lastMoodCheckTime != null">
+				 last_mood_check_time = #{bean.lastMoodCheckTime},
+			</if>
+			<if test="bean.consecutiveNegativeDays != null">
+				 consecutive_negative_days = #{bean.consecutiveNegativeDays},
+			</if>
+			<if test="bean.crisisFlag != null">
+				 crisis_flag = #{bean.crisisFlag},
+			</if>
+			<if test="bean.carePlan != null">
+				 care_plan = #{bean.carePlan},
+			</if>
+			<if test="bean.lastInteractionTime != null">
+				 last_interaction_time = #{bean.lastInteractionTime},
+			</if>
+			<if test="bean.createTime != null">
+				 create_time = #{bean.createTime},
+			</if>
+			<if test="bean.updateTime != null">
+				 update_time = #{bean.updateTime},
+			</if>
+ 		 </set>
+ 		 where user_id=#{userId} and bot_id=#{botId}
+	</update>
+
+	<!-- 根据UserIdAndBotId删除-->
+	<delete id="deleteByUserIdAndBotId">
+		delete from bot_user_profile where user_id=#{userId} and bot_id=#{botId}
+	</delete>
+
+	<!-- 根据PrimaryKey获取对象-->
+	<select id="selectByUserIdAndBotId" resultMap="base_result_map" >
+		select <include refid="base_column_list" /> from bot_user_profile b where user_id=#{userId} and bot_id=#{botId}
+	</select>
+
+</mapper>

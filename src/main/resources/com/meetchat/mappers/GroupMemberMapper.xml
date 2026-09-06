@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetchat.mappers.GroupMemberMapper">
+
+    <resultMap id="base_result_map" type="com.meetchat.entity.po.GroupMember">
+        <result column="id" property="id" />
+        <result column="group_id" property="groupId" />
+        <result column="user_id" property="userId" />
+        <result column="role" property="role" />
+        <result column="nickname_in_group" property="nicknameInGroup" />
+        <result column="join_time" property="joinTime" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <sql id="base_column_list">
+        m.id, m.group_id, m.user_id, m.role, m.nickname_in_group, m.join_time, m.status
+    </sql>
+
+    <select id="selectByGroupIdAndUserId" resultMap="base_result_map">
+        SELECT <include refid="base_column_list" />
+        FROM group_member m
+        WHERE m.group_id = #{groupId} AND m.user_id = #{userId}
+    </select>
+
+    <select id="selectActiveMembersByGroupId" resultMap="base_result_map">
+        SELECT <include refid="base_column_list" />
+        FROM group_member m
+        WHERE m.group_id = #{groupId} AND m.status = 0
+        ORDER BY FIELD(m.role, 'OWNER', 'ADMIN', 'MEMBER'), m.join_time ASC
+    </select>
+
+    <!-- 查询用户加入的所有正常状态的群ID（成员status=0 且 群status=0未解散） -->
+    <select id="selectActiveGroupIdsByUserId" resultType="java.lang.String">
+        SELECT m.group_id
+        FROM group_member m
+        JOIN group_info g ON g.group_id COLLATE utf8mb4_general_ci = m.group_id COLLATE utf8mb4_general_ci
+        WHERE m.user_id = #{userId}
+          AND m.status = 0
+          AND g.status = 0
+    </select>
+
+    <!-- 查询用户的群聊列表（ownerOnly=true 仅我创建的 OWNER；false 仅我加入的 非OWNER） -->
+    <select id="selectGroupsByUserId" resultMap="com.meetchat.mappers.GroupInfoMapper.base_result_map">
+        SELECT g.*, m.role AS member_role
+        FROM group_member m
+        JOIN group_info g ON g.group_id COLLATE utf8mb4_general_ci = m.group_id COLLATE utf8mb4_general_ci
+        WHERE m.user_id = #{userId}
+          AND m.status = 0
+          AND g.status = 0
+        <choose>
+            <when test="ownerOnly">AND m.role = 'OWNER'</when>
+            <otherwise>AND m.role != 'OWNER'</otherwise>
+        </choose>
+        ORDER BY g.create_time DESC
+    </select>
+
+    <insert id="insert" parameterType="com.meetchat.entity.po.GroupMember">
+        INSERT INTO group_member
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bean.groupId != null">group_id,</if>
+            <if test="bean.userId != null">user_id,</if>
+            <if test="bean.role != null">role,</if>
+            <if test="bean.nicknameInGroup != null">nickname_in_group,</if>
+            <if test="bean.joinTime != null">join_time,</if>
+            <if test="bean.status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bean.groupId != null">#{bean.groupId},</if>
+            <if test="bean.userId != null">#{bean.userId},</if>
+            <if test="bean.role != null">#{bean.role},</if>
+            <if test="bean.nicknameInGroup != null">#{bean.nicknameInGroup},</if>
+            <if test="bean.joinTime != null">#{bean.joinTime},</if>
+            <if test="bean.status != null">#{bean.status},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertOrUpdate" parameterType="com.meetchat.entity.po.GroupMember">
+        INSERT INTO group_member
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bean.groupId != null">group_id,</if>
+            <if test="bean.userId != null">user_id,</if>
+            <if test="bean.role != null">role,</if>
+            <if test="bean.nicknameInGroup != null">nickname_in_group,</if>
+            <if test="bean.joinTime != null">join_time,</if>
+            <if test="bean.status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bean.groupId != null">#{bean.groupId},</if>
+            <if test="bean.userId != null">#{bean.userId},</if>
+            <if test="bean.role != null">#{bean.role},</if>
+            <if test="bean.nicknameInGroup != null">#{bean.nicknameInGroup},</if>
+            <if test="bean.joinTime != null">#{bean.joinTime},</if>
+            <if test="bean.status != null">#{bean.status},</if>
+        </trim>
+        ON DUPLICATE KEY UPDATE
+        <trim prefix="" suffix="" suffixOverrides=",">
+            <if test="bean.role != null">role = VALUES(role),</if>
+            <if test="bean.nicknameInGroup != null">nickname_in_group = VALUES(nickname_in_group),</if>
+            <if test="bean.status != null">status = VALUES(status),</if>
+        </trim>
+    </insert>
+
+    <insert id="insertBatch" parameterType="com.meetchat.entity.po.GroupMember">
+        INSERT INTO group_member(group_id, user_id, role, nickname_in_group, join_time, status) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.groupId}, #{item.userId}, #{item.role}, #{item.nicknameInGroup}, #{item.joinTime}, #{item.status})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" parameterType="com.meetchat.entity.po.GroupMember">
+        INSERT INTO group_member(group_id, user_id, role, nickname_in_group, join_time, status) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.groupId}, #{item.userId}, #{item.role}, #{item.nicknameInGroup}, #{item.joinTime}, #{item.status})
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+            role = VALUES(role), nickname_in_group = VALUES(nickname_in_group), status = VALUES(status)
+    </insert>
+
+    <update id="updateByGroupIdAndUserId" parameterType="com.meetchat.entity.po.GroupMember">
+        UPDATE group_member
+        <set>
+            <if test="bean.role != null">role = #{bean.role},</if>
+            <if test="bean.nicknameInGroup != null">nickname_in_group = #{bean.nicknameInGroup},</if>
+            <if test="bean.status != null">status = #{bean.status},</if>
+        </set>
+        WHERE group_id = #{groupId} AND user_id = #{userId}
+    </update>
+
+    <update id="updateRole">
+        UPDATE group_member SET role = #{role} WHERE group_id = #{groupId} AND user_id = #{userId}
+    </update>
+
+    <update id="updateStatus">
+        UPDATE group_member SET status = #{status} WHERE group_id = #{groupId} AND user_id = #{userId}
+    </update>
+
+    <delete id="deleteByGroupId">
+        DELETE FROM group_member WHERE group_id = #{groupId}
+    </delete>
+
+    <!-- 统计单个群的正常成员数（status=0） -->
+    <select id="countActiveMembersByGroupId" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM group_member WHERE group_id = #{groupId} AND status = 0
+    </select>
+
+    <!-- 批量统计多个群的正常成员数（status=0），返回 groupId + memberCount -->
+    <select id="countActiveMembersByGroupIds" resultType="java.util.Map">
+        SELECT group_id AS groupId, COUNT(1) AS memberCount
+        FROM group_member
+        WHERE status = 0
+        AND group_id IN
+        <foreach collection="groupIds" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        GROUP BY group_id
+    </select>
+
+    <select id="selectList" resultMap="base_result_map">
+        SELECT <include refid="base_column_list" /> FROM group_member m
+        <where>
+            <if test="query.groupId != null and query.groupId != ''">AND m.group_id = #{query.groupId}</if>
+            <if test="query.userId != null and query.userId != ''">AND m.user_id = #{query.userId}</if>
+            <if test="query.role != null and query.role != ''">AND m.role = #{query.role}</if>
+            <if test="query.status != null">AND m.status = #{query.status}</if>
+        </where>
+    </select>
+
+    <select id="selectCount" resultType="java.lang.Integer">
+        SELECT count(1) FROM group_member m
+        <where>
+            <if test="query.groupId != null and query.groupId != ''">AND m.group_id = #{query.groupId}</if>
+            <if test="query.userId != null and query.userId != ''">AND m.user_id = #{query.userId}</if>
+            <if test="query.role != null and query.role != ''">AND m.role = #{query.role}</if>
+            <if test="query.status != null">AND m.status = #{query.status}</if>
+        </where>
+    </select>
+
+    <update id="updateByParam" parameterType="com.meetchat.entity.po.GroupMember">
+        UPDATE group_member m
+        <set>
+            <if test="bean.role != null">role = #{bean.role},</if>
+            <if test="bean.nicknameInGroup != null">nickname_in_group = #{bean.nicknameInGroup},</if>
+            <if test="bean.status != null">status = #{bean.status},</if>
+        </set>
+        <where>
+            <if test="query.groupId != null and query.groupId != ''">AND m.group_id = #{query.groupId}</if>
+            <if test="query.userId != null and query.userId != ''">AND m.user_id = #{query.userId}</if>
+            <if test="query.status != null">AND m.status = #{query.status}</if>
+        </where>
+    </update>
+
+    <delete id="deleteByParam">
+        DELETE m FROM group_member m
+        <where>
+            <if test="query.groupId != null and query.groupId != ''">AND m.group_id = #{query.groupId}</if>
+            <if test="query.userId != null and query.userId != ''">AND m.user_id = #{query.userId}</if>
+            <if test="query.status != null">AND m.status = #{query.status}</if>
+        </where>
+    </delete>
+
+</mapper>

@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetchat.mappers.UserFriendMapper">
+
+	<!--实体映射-->
+	<resultMap id="base_result_map" type="com.meetchat.entity.po.UserFriend">
+		<!--主键ID-->
+		<id column="id" property="id"  />
+		<!--用户ID-->
+		<result column="user_id" property="userId"  />
+		<!--好友的用户ID-->
+		<result column="friend_user_id" property="friendUserId"  />
+		<!--用户给好友设置的备注名-->
+		<result column="remark_name" property="remarkName"  />
+		<!--成为好友的时间-->
+		<result column="create_time" property="createTime"  />
+	</resultMap>
+
+
+	<!-- 通用查询结果列-->
+	<sql id="base_column_list">
+		 u.id,u.user_id,u.friend_user_id,u.remark_name,u.create_time
+		 
+	</sql>
+
+	<sql id="base_condition_filed">
+			<if test="query.id != null">
+				 and  u.id = #{query.id}
+			</if>
+			<if test="query.userId != null and query.userId!=''">
+				 and  u.user_id = #{query.userId}
+			</if>
+			<if test="query.friendUserId != null and query.friendUserId!=''">
+				 and  u.friend_user_id = #{query.friendUserId}
+			</if>
+			<if test="query.remarkName != null and query.remarkName!=''">
+				 and  u.remark_name = #{query.remarkName}
+			</if>
+			<if test="query.createTime != null and query.createTime!=''">
+				 <![CDATA[ and  u.create_time=str_to_date(#{query.createTime}, '%Y-%m-%d') ]]>
+			</if>
+	</sql>
+
+	<!-- 通用查询条件列-->
+	<sql id="query_condition">
+	 <where>
+			<include refid="base_condition_filed" />
+			<if test="query.userIdFuzzy!= null  and query.userIdFuzzy!=''">
+				 and  u.user_id like concat('%', #{query.userIdFuzzy}, '%')
+			</if>
+			<if test="query.friendUserIdFuzzy!= null  and query.friendUserIdFuzzy!=''">
+				 and  u.friend_user_id like concat('%', #{query.friendUserIdFuzzy}, '%')
+			</if>
+			<if test="query.remarkNameFuzzy!= null  and query.remarkNameFuzzy!=''">
+				 and  u.remark_name like concat('%', #{query.remarkNameFuzzy}, '%')
+			</if>
+			<if test="query.createTimeStart!= null and query.createTimeStart!=''">
+				 <![CDATA[ and  u.create_time>=str_to_date(#{query.createTimeStart}, '%Y-%m-%d') ]]>
+			</if>
+			<if test="query.createTimeEnd!= null and query.createTimeEnd!=''">
+				 <![CDATA[ and  u.create_time< date_sub(str_to_date(#{query.createTimeEnd},'%Y-%m-%d'),interval -1 day) ]]>
+			</if>
+	 </where>
+	</sql>
+
+	<!-- 查询集合-->
+	<select id="selectList" resultMap="base_result_map" >
+		 SELECT <include refid="base_column_list" /> FROM user_friend u <include refid="query_condition" />
+		 <if test="query.orderBy!=null">
+			 order by ${query.orderBy}
+		 </if>
+		 <if test="query.simplePage!=null">
+			 limit #{query.simplePage.start},#{query.simplePage.end}
+		 </if>
+	</select>
+
+	<!-- 查询数量-->
+	<select id="selectCount" resultType="java.lang.Integer" >
+		 SELECT count(1) FROM user_friend u <include refid="query_condition" />
+	</select>
+
+	<!-- 插入 （匹配有值的字段）-->
+	<insert id="insert" parameterType="com.meetchat.entity.po.UserFriend">
+		<selectKey keyProperty="bean.id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		 INSERT INTO user_friend
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="bean.userId != null">
+				 user_id,
+			</if>
+			<if test="bean.friendUserId != null">
+				 friend_user_id,
+			</if>
+			<if test="bean.remarkName != null">
+				 remark_name,
+			</if>
+			<if test="bean.createTime != null">
+				 create_time,
+			</if>
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="bean.userId!=null">
+				 #{bean.userId},
+			</if>
+			<if test="bean.friendUserId!=null">
+				 #{bean.friendUserId},
+			</if>
+			<if test="bean.remarkName!=null">
+				 #{bean.remarkName},
+			</if>
+			<if test="bean.createTime!=null">
+				 #{bean.createTime},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段）-->
+	<insert id="insertOrUpdate" parameterType="com.meetchat.entity.po.UserFriend">
+		 INSERT INTO user_friend
+		 <trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				 id,
+			</if>
+			<if test="bean.userId != null">
+				 user_id,
+			</if>
+			<if test="bean.friendUserId != null">
+				 friend_user_id,
+			</if>
+			<if test="bean.remarkName != null">
+				 remark_name,
+			</if>
+			<if test="bean.createTime != null">
+				 create_time,
+			</if>
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.id!=null">
+				 #{bean.id},
+			</if>
+			<if test="bean.userId!=null">
+				 #{bean.userId},
+			</if>
+			<if test="bean.friendUserId!=null">
+				 #{bean.friendUserId},
+			</if>
+			<if test="bean.remarkName!=null">
+				 #{bean.remarkName},
+			</if>
+			<if test="bean.createTime!=null">
+				 #{bean.createTime},
+			</if>
+		 </trim>
+		 on DUPLICATE key update 
+		 <trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.userId!=null">
+				 user_id = VALUES(user_id),
+			</if>
+			<if test="bean.friendUserId!=null">
+				 friend_user_id = VALUES(friend_user_id),
+			</if>
+			<if test="bean.remarkName!=null">
+				 remark_name = VALUES(remark_name),
+			</if>
+			<if test="bean.createTime!=null">
+				 create_time = VALUES(create_time),
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 添加 （批量插入）-->
+	<insert id="insertBatch" parameterType="com.meetchat.entity.po.UserFriend" useGeneratedKeys="true" keyProperty="id">
+		 INSERT INTO user_friend(
+			 user_id,
+			 friend_user_id,
+			 remark_name,
+			 create_time
+		 )values
+		 <foreach collection="list" item="item" separator=",">
+			 (
+				 #{item.userId},
+				 #{item.friendUserId},
+				 #{item.remarkName},
+				 #{item.createTime}
+			 )
+		 </foreach>
+	</insert>
+
+	<!-- 批量新增修改 （批量插入）-->
+	<insert id="insertOrUpdateBatch" parameterType="com.meetchat.entity.po.UserFriend">
+		 INSERT INTO user_friend(
+			 user_id,
+			 friend_user_id,
+			 remark_name,
+			 create_time
+		 )values
+		 <foreach collection="list" item="item" separator=",">
+			 (
+				 #{item.userId},
+				 #{item.friendUserId},
+				 #{item.remarkName},
+				 #{item.createTime}
+			 )
+		 </foreach>
+			on DUPLICATE key update 
+			user_id = VALUES(user_id),
+			friend_user_id = VALUES(friend_user_id),
+			remark_name = VALUES(remark_name),
+			create_time = VALUES(create_time)
+	</insert>
+
+	<!--多条件修改-->
+	<update id="updateByParam" parameterType="com.meetchat.entity.query.UserFriendQuery">
+		 UPDATE user_friend u
+ 		 <set> 
+			<if test="bean.userId != null">
+				 user_id = #{bean.userId},
+			</if>
+			<if test="bean.friendUserId != null">
+				 friend_user_id = #{bean.friendUserId},
+			</if>
+			<if test="bean.remarkName != null">
+				 remark_name = #{bean.remarkName},
+			</if>
+			<if test="bean.createTime != null">
+				 create_time = #{bean.createTime},
+			</if>
+ 		 </set>
+ 		 <include refid="query_condition" />
+	</update>
+
+	<!--多条件删除-->
+	<delete id="deleteByParam">
+		 delete u from user_friend u
+ 		 <include refid="query_condition" />
+	</delete>
+
+	<!-- 根据Id修改-->
+	<update id="updateById" parameterType="com.meetchat.entity.po.UserFriend">
+		 UPDATE user_friend
+ 		 <set> 
+			<if test="bean.userId != null">
+				 user_id = #{bean.userId},
+			</if>
+			<if test="bean.friendUserId != null">
+				 friend_user_id = #{bean.friendUserId},
+			</if>
+			<if test="bean.remarkName != null">
+				 remark_name = #{bean.remarkName},
+			</if>
+			<if test="bean.createTime != null">
+				 create_time = #{bean.createTime},
+			</if>
+ 		 </set>
+ 		 where id=#{id}
+	</update>
+
+	<!-- 根据Id删除-->
+	<delete id="deleteById">
+		delete from user_friend where id=#{id}
+	</delete>
+
+	<!-- 根据PrimaryKey获取对象-->
+	<select id="selectById" resultMap="base_result_map" >
+		select <include refid="base_column_list" /> from user_friend u where id=#{id}
+	</select>
+
+	<!-- 根据UserIdAndFriendUserId修改-->
+	<update id="updateByUserIdAndFriendUserId" parameterType="com.meetchat.entity.po.UserFriend">
+		 UPDATE user_friend
+ 		 <set> 
+			<if test="bean.remarkName != null">
+				 remark_name = #{bean.remarkName},
+			</if>
+			<if test="bean.createTime != null">
+				 create_time = #{bean.createTime},
+			</if>
+ 		 </set>
+ 		 where user_id=#{userId} and friend_user_id=#{friendUserId}
+	</update>
+
+	<!-- 根据UserIdAndFriendUserId删除-->
+	<delete id="deleteByUserIdAndFriendUserId">
+		delete from user_friend where user_id=#{userId} and friend_user_id=#{friendUserId}
+	</delete>
+
+	<!-- 根据PrimaryKey获取对象-->
+	<select id="selectByUserIdAndFriendUserId" resultMap="base_result_map" >
+		select <include refid="base_column_list" /> from user_friend u where user_id=#{userId} and friend_user_id=#{friendUserId}
+	</select>
+
+	<!-- 非机器人好友 DTO 映射 -->
+	<resultMap id="friend_with_user_info_map" type="com.meetchat.entity.Dto.FriendWithUserInfoDto">
+		<result column="friend_id"        property="friendId"        />
+		<result column="nick_name"        property="nickName"        />
+		<result column="remark_name"      property="remarkName"      />
+		<result column="avatar_file_id"   property="avatarFileId"    />
+		<result column="avatar_file_path" property="avatarFilePath"  />
+	</resultMap>
+
+	<!--
+		查询非机器人好友列表（单条 SQL，消除 N+1 查询）
+		机器人 ID 以 'R' 开头，普通用户以 'U' 开头，直接按前缀过滤
+		LEFT JOIN user_info ui：获取好友昵称
+	-->
+	<select id="selectNonBotFriends" resultMap="friend_with_user_info_map">
+		SELECT
+			u.friend_user_id              AS friend_id,
+			ui.nick_name                  AS nick_name,
+			u.remark_name                 AS remark_name,
+			''                            AS avatar_file_id,
+			''                            AS avatar_file_path
+		FROM user_friend u
+		LEFT JOIN user_info ui
+			ON ui.user_id COLLATE utf8mb4_general_ci = u.friend_user_id COLLATE utf8mb4_general_ci
+		WHERE u.user_id = #{userId}
+		  AND u.friend_user_id NOT LIKE 'R%'
+	</select>
+
+</mapper>

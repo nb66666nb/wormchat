@@ -1,0 +1,730 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetchat.mappers.BotConversationSummaryMapper">
+
+	<!--实体映射-->
+	<resultMap id="base_result_map" type="com.meetchat.entity.po.BotConversationSummary">
+		<!---->
+		<id column="id" property="id"  />
+		<!---->
+		<result column="session_id" property="sessionId"  />
+		<!---->
+		<result column="user_id" property="userId"  />
+		<!---->
+		<result column="bot_id" property="botId"  />
+		<!---->
+		<result column="summary" property="summary"  />
+		<!--关键话题-->
+		<result column="key_topics" property="keyTopics"  />
+		<!--用户意图-->
+		<result column="user_intents" property="userIntents"  />
+		<!---->
+		<result column="emotion_start" property="emotionStart"  />
+		<!---->
+		<result column="emotion_end" property="emotionEnd"  />
+		<!---->
+		<result column="emotion_trend" property="emotionTrend"  />
+		<!--情绪触发点-->
+		<result column="emotion_triggers" property="emotionTriggers"  />
+		<!---->
+		<result column="user_openness" property="userOpenness"  />
+		<!---->
+		<result column="bot_empathy_score" property="botEmpathyScore"  />
+		<!---->
+		<result column="follow_up_needed" property="followUpNeeded"  />
+		<!---->
+		<result column="follow_up_topic" property="followUpTopic"  />
+		<!---->
+		<result column="start_time" property="startTime"  />
+		<!---->
+		<result column="end_time" property="endTime"  />
+		<!---->
+		<result column="message_count" property="messageCount"  />
+		<!---->
+		<result column="create_time" property="createTime"  />
+	</resultMap>
+
+
+	<!-- 通用查询结果列-->
+	<sql id="base_column_list">
+		 b.id,b.session_id,b.user_id,b.bot_id,b.summary,
+		 b.key_topics,b.user_intents,b.emotion_start,b.emotion_end,b.emotion_trend,
+		 b.emotion_triggers,b.user_openness,b.bot_empathy_score,b.follow_up_needed,b.follow_up_topic,
+		 b.start_time,b.end_time,b.message_count,b.create_time
+	</sql>
+
+	<sql id="base_condition_filed">
+			<if test="query.id != null">
+				 and  b.id = #{query.id}
+			</if>
+			<if test="query.sessionId != null and query.sessionId!=''">
+				 and  b.session_id = #{query.sessionId}
+			</if>
+			<if test="query.userId != null and query.userId!=''">
+				 and  b.user_id = #{query.userId}
+			</if>
+			<if test="query.botId != null and query.botId!=''">
+				 and  b.bot_id = #{query.botId}
+			</if>
+			<if test="query.summary != null and query.summary!=''">
+				 and  b.summary = #{query.summary}
+			</if>
+			<if test="query.keyTopics != null and query.keyTopics!=''">
+				 and  b.key_topics = #{query.keyTopics}
+			</if>
+			<if test="query.userIntents != null and query.userIntents!=''">
+				 and  b.user_intents = #{query.userIntents}
+			</if>
+			<if test="query.emotionStart != null and query.emotionStart!=''">
+				 and  b.emotion_start = #{query.emotionStart}
+			</if>
+			<if test="query.emotionEnd != null and query.emotionEnd!=''">
+				 and  b.emotion_end = #{query.emotionEnd}
+			</if>
+			<if test="query.emotionTrend != null and query.emotionTrend!=''">
+				 and  b.emotion_trend = #{query.emotionTrend}
+			</if>
+			<if test="query.emotionTriggers != null and query.emotionTriggers!=''">
+				 and  b.emotion_triggers = #{query.emotionTriggers}
+			</if>
+			<if test="query.userOpenness != null">
+				 and  b.user_openness = #{query.userOpenness}
+			</if>
+			<if test="query.botEmpathyScore != null">
+				 and  b.bot_empathy_score = #{query.botEmpathyScore}
+			</if>
+			<if test="query.followUpNeeded != null">
+				 and  b.follow_up_needed = #{query.followUpNeeded}
+			</if>
+			<if test="query.followUpTopic != null and query.followUpTopic!=''">
+				 and  b.follow_up_topic = #{query.followUpTopic}
+			</if>
+			<if test="query.startTime != null">
+				 and  b.start_time = #{query.startTime}
+			</if>
+			<if test="query.endTime != null">
+				 and  b.end_time = #{query.endTime}
+			</if>
+			<if test="query.messageCount != null">
+				 and  b.message_count = #{query.messageCount}
+			</if>
+			<if test="query.createTime != null and query.createTime!=''">
+				 <![CDATA[ and  b.create_time=str_to_date(#{query.createTime}, '%Y-%m-%d') ]]>
+			</if>
+	</sql>
+
+	<!-- 通用查询条件列-->
+	<sql id="query_condition">
+	 <where>
+			<include refid="base_condition_filed" />
+			<if test="query.sessionIdFuzzy!= null  and query.sessionIdFuzzy!=''">
+				 and  b.session_id like concat('%', #{query.sessionIdFuzzy}, '%')
+			</if>
+			<if test="query.userIdFuzzy!= null  and query.userIdFuzzy!=''">
+				 and  b.user_id like concat('%', #{query.userIdFuzzy}, '%')
+			</if>
+			<if test="query.botIdFuzzy!= null  and query.botIdFuzzy!=''">
+				 and  b.bot_id like concat('%', #{query.botIdFuzzy}, '%')
+			</if>
+			<if test="query.summaryFuzzy!= null  and query.summaryFuzzy!=''">
+				 and  b.summary like concat('%', #{query.summaryFuzzy}, '%')
+			</if>
+			<if test="query.keyTopicsFuzzy!= null  and query.keyTopicsFuzzy!=''">
+				 and  b.key_topics like concat('%', #{query.keyTopicsFuzzy}, '%')
+			</if>
+			<if test="query.userIntentsFuzzy!= null  and query.userIntentsFuzzy!=''">
+				 and  b.user_intents like concat('%', #{query.userIntentsFuzzy}, '%')
+			</if>
+			<if test="query.emotionStartFuzzy!= null  and query.emotionStartFuzzy!=''">
+				 and  b.emotion_start like concat('%', #{query.emotionStartFuzzy}, '%')
+			</if>
+			<if test="query.emotionEndFuzzy!= null  and query.emotionEndFuzzy!=''">
+				 and  b.emotion_end like concat('%', #{query.emotionEndFuzzy}, '%')
+			</if>
+			<if test="query.emotionTrendFuzzy!= null  and query.emotionTrendFuzzy!=''">
+				 and  b.emotion_trend like concat('%', #{query.emotionTrendFuzzy}, '%')
+			</if>
+			<if test="query.emotionTriggersFuzzy!= null  and query.emotionTriggersFuzzy!=''">
+				 and  b.emotion_triggers like concat('%', #{query.emotionTriggersFuzzy}, '%')
+			</if>
+			<if test="query.followUpTopicFuzzy!= null  and query.followUpTopicFuzzy!=''">
+				 and  b.follow_up_topic like concat('%', #{query.followUpTopicFuzzy}, '%')
+			</if>
+			<if test="query.createTimeStart!= null and query.createTimeStart!=''">
+				 <![CDATA[ and  b.create_time>=str_to_date(#{query.createTimeStart}, '%Y-%m-%d') ]]>
+			</if>
+			<if test="query.createTimeEnd!= null and query.createTimeEnd!=''">
+				 <![CDATA[ and  b.create_time< date_sub(str_to_date(#{query.createTimeEnd},'%Y-%m-%d'),interval -1 day) ]]>
+			</if>
+	 </where>
+	</sql>
+
+	<!-- 查询集合-->
+	<select id="selectList" resultMap="base_result_map" >
+		 SELECT <include refid="base_column_list" /> FROM bot_conversation_summary b <include refid="query_condition" />
+		 <if test="query.orderBy!=null">
+			 order by ${query.orderBy}
+		 </if>
+		 <if test="query.simplePage!=null">
+			 limit #{query.simplePage.start},#{query.simplePage.end}
+		 </if>
+	</select>
+
+	<!-- 查询数量-->
+	<select id="selectCount" resultType="java.lang.Integer" >
+		 SELECT count(1) FROM bot_conversation_summary b <include refid="query_condition" />
+	</select>
+
+	<!-- 插入 （匹配有值的字段）-->
+	<insert id="insert" parameterType="com.meetchat.entity.po.BotConversationSummary">
+		<selectKey keyProperty="bean.id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		 INSERT INTO bot_conversation_summary
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="bean.sessionId != null">
+				 session_id,
+			</if>
+			<if test="bean.userId != null">
+				 user_id,
+			</if>
+			<if test="bean.botId != null">
+				 bot_id,
+			</if>
+			<if test="bean.summary != null">
+				 summary,
+			</if>
+			<if test="bean.keyTopics != null">
+				 key_topics,
+			</if>
+			<if test="bean.userIntents != null">
+				 user_intents,
+			</if>
+			<if test="bean.emotionStart != null">
+				 emotion_start,
+			</if>
+			<if test="bean.emotionEnd != null">
+				 emotion_end,
+			</if>
+			<if test="bean.emotionTrend != null">
+				 emotion_trend,
+			</if>
+			<if test="bean.emotionTriggers != null">
+				 emotion_triggers,
+			</if>
+			<if test="bean.userOpenness != null">
+				 user_openness,
+			</if>
+			<if test="bean.botEmpathyScore != null">
+				 bot_empathy_score,
+			</if>
+			<if test="bean.followUpNeeded != null">
+				 follow_up_needed,
+			</if>
+			<if test="bean.followUpTopic != null">
+				 follow_up_topic,
+			</if>
+			<if test="bean.startTime != null">
+				 start_time,
+			</if>
+			<if test="bean.endTime != null">
+				 end_time,
+			</if>
+			<if test="bean.messageCount != null">
+				 message_count,
+			</if>
+			<if test="bean.createTime != null">
+				 create_time,
+			</if>
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="bean.sessionId!=null">
+				 #{bean.sessionId},
+			</if>
+			<if test="bean.userId!=null">
+				 #{bean.userId},
+			</if>
+			<if test="bean.botId!=null">
+				 #{bean.botId},
+			</if>
+			<if test="bean.summary!=null">
+				 #{bean.summary},
+			</if>
+			<if test="bean.keyTopics!=null">
+				 #{bean.keyTopics},
+			</if>
+			<if test="bean.userIntents!=null">
+				 #{bean.userIntents},
+			</if>
+			<if test="bean.emotionStart!=null">
+				 #{bean.emotionStart},
+			</if>
+			<if test="bean.emotionEnd!=null">
+				 #{bean.emotionEnd},
+			</if>
+			<if test="bean.emotionTrend!=null">
+				 #{bean.emotionTrend},
+			</if>
+			<if test="bean.emotionTriggers!=null">
+				 #{bean.emotionTriggers},
+			</if>
+			<if test="bean.userOpenness!=null">
+				 #{bean.userOpenness},
+			</if>
+			<if test="bean.botEmpathyScore!=null">
+				 #{bean.botEmpathyScore},
+			</if>
+			<if test="bean.followUpNeeded!=null">
+				 #{bean.followUpNeeded},
+			</if>
+			<if test="bean.followUpTopic!=null">
+				 #{bean.followUpTopic},
+			</if>
+			<if test="bean.startTime!=null">
+				 #{bean.startTime},
+			</if>
+			<if test="bean.endTime!=null">
+				 #{bean.endTime},
+			</if>
+			<if test="bean.messageCount!=null">
+				 #{bean.messageCount},
+			</if>
+			<if test="bean.createTime!=null">
+				 #{bean.createTime},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段）-->
+	<insert id="insertOrUpdate" parameterType="com.meetchat.entity.po.BotConversationSummary">
+		 INSERT INTO bot_conversation_summary
+		 <trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				 id,
+			</if>
+			<if test="bean.sessionId != null">
+				 session_id,
+			</if>
+			<if test="bean.userId != null">
+				 user_id,
+			</if>
+			<if test="bean.botId != null">
+				 bot_id,
+			</if>
+			<if test="bean.summary != null">
+				 summary,
+			</if>
+			<if test="bean.keyTopics != null">
+				 key_topics,
+			</if>
+			<if test="bean.userIntents != null">
+				 user_intents,
+			</if>
+			<if test="bean.emotionStart != null">
+				 emotion_start,
+			</if>
+			<if test="bean.emotionEnd != null">
+				 emotion_end,
+			</if>
+			<if test="bean.emotionTrend != null">
+				 emotion_trend,
+			</if>
+			<if test="bean.emotionTriggers != null">
+				 emotion_triggers,
+			</if>
+			<if test="bean.userOpenness != null">
+				 user_openness,
+			</if>
+			<if test="bean.botEmpathyScore != null">
+				 bot_empathy_score,
+			</if>
+			<if test="bean.followUpNeeded != null">
+				 follow_up_needed,
+			</if>
+			<if test="bean.followUpTopic != null">
+				 follow_up_topic,
+			</if>
+			<if test="bean.startTime != null">
+				 start_time,
+			</if>
+			<if test="bean.endTime != null">
+				 end_time,
+			</if>
+			<if test="bean.messageCount != null">
+				 message_count,
+			</if>
+			<if test="bean.createTime != null">
+				 create_time,
+			</if>
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.id!=null">
+				 #{bean.id},
+			</if>
+			<if test="bean.sessionId!=null">
+				 #{bean.sessionId},
+			</if>
+			<if test="bean.userId!=null">
+				 #{bean.userId},
+			</if>
+			<if test="bean.botId!=null">
+				 #{bean.botId},
+			</if>
+			<if test="bean.summary!=null">
+				 #{bean.summary},
+			</if>
+			<if test="bean.keyTopics!=null">
+				 #{bean.keyTopics},
+			</if>
+			<if test="bean.userIntents!=null">
+				 #{bean.userIntents},
+			</if>
+			<if test="bean.emotionStart!=null">
+				 #{bean.emotionStart},
+			</if>
+			<if test="bean.emotionEnd!=null">
+				 #{bean.emotionEnd},
+			</if>
+			<if test="bean.emotionTrend!=null">
+				 #{bean.emotionTrend},
+			</if>
+			<if test="bean.emotionTriggers!=null">
+				 #{bean.emotionTriggers},
+			</if>
+			<if test="bean.userOpenness!=null">
+				 #{bean.userOpenness},
+			</if>
+			<if test="bean.botEmpathyScore!=null">
+				 #{bean.botEmpathyScore},
+			</if>
+			<if test="bean.followUpNeeded!=null">
+				 #{bean.followUpNeeded},
+			</if>
+			<if test="bean.followUpTopic!=null">
+				 #{bean.followUpTopic},
+			</if>
+			<if test="bean.startTime!=null">
+				 #{bean.startTime},
+			</if>
+			<if test="bean.endTime!=null">
+				 #{bean.endTime},
+			</if>
+			<if test="bean.messageCount!=null">
+				 #{bean.messageCount},
+			</if>
+			<if test="bean.createTime!=null">
+				 #{bean.createTime},
+			</if>
+		 </trim>
+		 on DUPLICATE key update 
+		 <trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.sessionId!=null">
+				 session_id = VALUES(session_id),
+			</if>
+			<if test="bean.userId!=null">
+				 user_id = VALUES(user_id),
+			</if>
+			<if test="bean.botId!=null">
+				 bot_id = VALUES(bot_id),
+			</if>
+			<if test="bean.summary!=null">
+				 summary = VALUES(summary),
+			</if>
+			<if test="bean.keyTopics!=null">
+				 key_topics = VALUES(key_topics),
+			</if>
+			<if test="bean.userIntents!=null">
+				 user_intents = VALUES(user_intents),
+			</if>
+			<if test="bean.emotionStart!=null">
+				 emotion_start = VALUES(emotion_start),
+			</if>
+			<if test="bean.emotionEnd!=null">
+				 emotion_end = VALUES(emotion_end),
+			</if>
+			<if test="bean.emotionTrend!=null">
+				 emotion_trend = VALUES(emotion_trend),
+			</if>
+			<if test="bean.emotionTriggers!=null">
+				 emotion_triggers = VALUES(emotion_triggers),
+			</if>
+			<if test="bean.userOpenness!=null">
+				 user_openness = VALUES(user_openness),
+			</if>
+			<if test="bean.botEmpathyScore!=null">
+				 bot_empathy_score = VALUES(bot_empathy_score),
+			</if>
+			<if test="bean.followUpNeeded!=null">
+				 follow_up_needed = VALUES(follow_up_needed),
+			</if>
+			<if test="bean.followUpTopic!=null">
+				 follow_up_topic = VALUES(follow_up_topic),
+			</if>
+			<if test="bean.startTime!=null">
+				 start_time = VALUES(start_time),
+			</if>
+			<if test="bean.endTime!=null">
+				 end_time = VALUES(end_time),
+			</if>
+			<if test="bean.messageCount!=null">
+				 message_count = VALUES(message_count),
+			</if>
+			<if test="bean.createTime!=null">
+				 create_time = VALUES(create_time),
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 添加 （批量插入）-->
+	<insert id="insertBatch" parameterType="com.meetchat.entity.po.BotConversationSummary" useGeneratedKeys="true" keyProperty="id">
+		 INSERT INTO bot_conversation_summary(
+			 session_id,
+			 user_id,
+			 bot_id,
+			 summary,
+			 key_topics,
+			 user_intents,
+			 emotion_start,
+			 emotion_end,
+			 emotion_trend,
+			 emotion_triggers,
+			 user_openness,
+			 bot_empathy_score,
+			 follow_up_needed,
+			 follow_up_topic,
+			 start_time,
+			 end_time,
+			 message_count,
+			 create_time
+		 )values
+		 <foreach collection="list" item="item" separator=",">
+			 (
+				 #{item.sessionId},
+				 #{item.userId},
+				 #{item.botId},
+				 #{item.summary},
+				 #{item.keyTopics},
+				 #{item.userIntents},
+				 #{item.emotionStart},
+				 #{item.emotionEnd},
+				 #{item.emotionTrend},
+				 #{item.emotionTriggers},
+				 #{item.userOpenness},
+				 #{item.botEmpathyScore},
+				 #{item.followUpNeeded},
+				 #{item.followUpTopic},
+				 #{item.startTime},
+				 #{item.endTime},
+				 #{item.messageCount},
+				 #{item.createTime}
+			 )
+		 </foreach>
+	</insert>
+
+	<!-- 批量新增修改 （批量插入）-->
+	<insert id="insertOrUpdateBatch" parameterType="com.meetchat.entity.po.BotConversationSummary">
+		 INSERT INTO bot_conversation_summary(
+			 session_id,
+			 user_id,
+			 bot_id,
+			 summary,
+			 key_topics,
+			 user_intents,
+			 emotion_start,
+			 emotion_end,
+			 emotion_trend,
+			 emotion_triggers,
+			 user_openness,
+			 bot_empathy_score,
+			 follow_up_needed,
+			 follow_up_topic,
+			 start_time,
+			 end_time,
+			 message_count,
+			 create_time
+		 )values
+		 <foreach collection="list" item="item" separator=",">
+			 (
+				 #{item.sessionId},
+				 #{item.userId},
+				 #{item.botId},
+				 #{item.summary},
+				 #{item.keyTopics},
+				 #{item.userIntents},
+				 #{item.emotionStart},
+				 #{item.emotionEnd},
+				 #{item.emotionTrend},
+				 #{item.emotionTriggers},
+				 #{item.userOpenness},
+				 #{item.botEmpathyScore},
+				 #{item.followUpNeeded},
+				 #{item.followUpTopic},
+				 #{item.startTime},
+				 #{item.endTime},
+				 #{item.messageCount},
+				 #{item.createTime}
+			 )
+		 </foreach>
+			on DUPLICATE key update 
+			session_id = VALUES(session_id),
+			user_id = VALUES(user_id),
+			bot_id = VALUES(bot_id),
+			summary = VALUES(summary),
+			key_topics = VALUES(key_topics),
+			user_intents = VALUES(user_intents),
+			emotion_start = VALUES(emotion_start),
+			emotion_end = VALUES(emotion_end),
+			emotion_trend = VALUES(emotion_trend),
+			emotion_triggers = VALUES(emotion_triggers),
+			user_openness = VALUES(user_openness),
+			bot_empathy_score = VALUES(bot_empathy_score),
+			follow_up_needed = VALUES(follow_up_needed),
+			follow_up_topic = VALUES(follow_up_topic),
+			start_time = VALUES(start_time),
+			end_time = VALUES(end_time),
+			message_count = VALUES(message_count),
+			create_time = VALUES(create_time)
+	</insert>
+
+	<!--多条件修改-->
+	<update id="updateByParam" parameterType="com.meetchat.entity.query.BotConversationSummaryQuery">
+		 UPDATE bot_conversation_summary b
+ 		 <set> 
+			<if test="bean.sessionId != null">
+				 session_id = #{bean.sessionId},
+			</if>
+			<if test="bean.userId != null">
+				 user_id = #{bean.userId},
+			</if>
+			<if test="bean.botId != null">
+				 bot_id = #{bean.botId},
+			</if>
+			<if test="bean.summary != null">
+				 summary = #{bean.summary},
+			</if>
+			<if test="bean.keyTopics != null">
+				 key_topics = #{bean.keyTopics},
+			</if>
+			<if test="bean.userIntents != null">
+				 user_intents = #{bean.userIntents},
+			</if>
+			<if test="bean.emotionStart != null">
+				 emotion_start = #{bean.emotionStart},
+			</if>
+			<if test="bean.emotionEnd != null">
+				 emotion_end = #{bean.emotionEnd},
+			</if>
+			<if test="bean.emotionTrend != null">
+				 emotion_trend = #{bean.emotionTrend},
+			</if>
+			<if test="bean.emotionTriggers != null">
+				 emotion_triggers = #{bean.emotionTriggers},
+			</if>
+			<if test="bean.userOpenness != null">
+				 user_openness = #{bean.userOpenness},
+			</if>
+			<if test="bean.botEmpathyScore != null">
+				 bot_empathy_score = #{bean.botEmpathyScore},
+			</if>
+			<if test="bean.followUpNeeded != null">
+				 follow_up_needed = #{bean.followUpNeeded},
+			</if>
+			<if test="bean.followUpTopic != null">
+				 follow_up_topic = #{bean.followUpTopic},
+			</if>
+			<if test="bean.startTime != null">
+				 start_time = #{bean.startTime},
+			</if>
+			<if test="bean.endTime != null">
+				 end_time = #{bean.endTime},
+			</if>
+			<if test="bean.messageCount != null">
+				 message_count = #{bean.messageCount},
+			</if>
+			<if test="bean.createTime != null">
+				 create_time = #{bean.createTime},
+			</if>
+ 		 </set>
+ 		 <include refid="query_condition" />
+	</update>
+
+	<!--多条件删除-->
+	<delete id="deleteByParam">
+		 delete b from bot_conversation_summary b
+ 		 <include refid="query_condition" />
+	</delete>
+
+	<!-- 根据Id修改-->
+	<update id="updateById" parameterType="com.meetchat.entity.po.BotConversationSummary">
+		 UPDATE bot_conversation_summary
+ 		 <set> 
+			<if test="bean.sessionId != null">
+				 session_id = #{bean.sessionId},
+			</if>
+			<if test="bean.userId != null">
+				 user_id = #{bean.userId},
+			</if>
+			<if test="bean.botId != null">
+				 bot_id = #{bean.botId},
+			</if>
+			<if test="bean.summary != null">
+				 summary = #{bean.summary},
+			</if>
+			<if test="bean.keyTopics != null">
+				 key_topics = #{bean.keyTopics},
+			</if>
+			<if test="bean.userIntents != null">
+				 user_intents = #{bean.userIntents},
+			</if>
+			<if test="bean.emotionStart != null">
+				 emotion_start = #{bean.emotionStart},
+			</if>
+			<if test="bean.emotionEnd != null">
+				 emotion_end = #{bean.emotionEnd},
+			</if>
+			<if test="bean.emotionTrend != null">
+				 emotion_trend = #{bean.emotionTrend},
+			</if>
+			<if test="bean.emotionTriggers != null">
+				 emotion_triggers = #{bean.emotionTriggers},
+			</if>
+			<if test="bean.userOpenness != null">
+				 user_openness = #{bean.userOpenness},
+			</if>
+			<if test="bean.botEmpathyScore != null">
+				 bot_empathy_score = #{bean.botEmpathyScore},
+			</if>
+			<if test="bean.followUpNeeded != null">
+				 follow_up_needed = #{bean.followUpNeeded},
+			</if>
+			<if test="bean.followUpTopic != null">
+				 follow_up_topic = #{bean.followUpTopic},
+			</if>
+			<if test="bean.startTime != null">
+				 start_time = #{bean.startTime},
+			</if>
+			<if test="bean.endTime != null">
+				 end_time = #{bean.endTime},
+			</if>
+			<if test="bean.messageCount != null">
+				 message_count = #{bean.messageCount},
+			</if>
+			<if test="bean.createTime != null">
+				 create_time = #{bean.createTime},
+			</if>
+ 		 </set>
+ 		 where id=#{id}
+	</update>
+
+	<!-- 根据Id删除-->
+	<delete id="deleteById">
+		delete from bot_conversation_summary where id=#{id}
+	</delete>
+
+	<!-- 根据PrimaryKey获取对象-->
+	<select id="selectById" resultMap="base_result_map" >
+		select <include refid="base_column_list" /> from bot_conversation_summary b where id=#{id}
+	</select>
+
+</mapper>

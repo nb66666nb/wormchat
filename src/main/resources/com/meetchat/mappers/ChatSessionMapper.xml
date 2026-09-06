@@ -1,0 +1,677 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetchat.mappers.ChatSessionMapper">
+
+	<!--实体映射-->
+	<resultMap id="base_result_map" type="com.meetchat.entity.po.ChatSession">
+		<!--会话ID（主键）-->
+		<result column="session_id" property="sessionId"  />
+		<!--会话所属用户ID-->
+		<result column="user_id" property="userId"  />
+		<!--对方用户ID（单聊时填充）-->
+		<result column="target_user_id" property="targetUserId"  />
+		<!--对方昵称-->
+		<result column="target_nick_name" property="targetNickName"  />
+		<!--会话类型：1-单聊 2-群聊-->
+		<result column="session_type" property="sessionType"  />
+		<!--机器人分类-->
+		<result column="bot_category" property="botCategory"  />
+		<!--关联模板ID-->
+		<result column="template_id" property="templateId"  />
+		<!--个性化性格参数-->
+		<result column="bot_personality" property="botPersonality"  />
+		<!--机器人头像路径-->
+		<result column="bot_avatar_path" property="botAvatarPath"  />
+		<!--机器人角色名称-->
+		<result column="bot_name" property="botName"  />
+		<!--机器人角色描述-->
+		<result column="bot_description" property="botDescription"  />
+		<!--系统提示词-->
+		<result column="bot_system_prompt" property="botSystemPrompt"  />
+		<!--欢迎语-->
+		<result column="bot_welcome_msg" property="botWelcomeMsg"  />
+		<!--最后一条消息摘要-->
+		<result column="last_message" property="lastMessage"  />
+		<!--最后消息时间戳(ms)-->
+		<result column="last_message_time" property="lastMessageTime"  />
+	</resultMap>
+
+
+	<!-- 通用查询结果列-->
+	<sql id="base_column_list">
+		 c.session_id,c.user_id,c.target_user_id,c.target_nick_name,c.session_type,
+		 c.bot_category,c.template_id,c.bot_personality,
+		 c.bot_avatar_path,c.bot_name,c.bot_description,c.bot_system_prompt,
+		 c.bot_welcome_msg,c.last_message,c.last_message_time
+	</sql>
+
+	<sql id="base_condition_filed">
+			<if test="query.sessionId != null and query.sessionId!=''">
+				 and  c.session_id = #{query.sessionId}
+			</if>
+			<if test="query.userId != null and query.userId!=''">
+				 and  c.user_id = #{query.userId}
+			</if>
+			<if test="query.targetUserId != null and query.targetUserId!=''">
+				 and  c.target_user_id = #{query.targetUserId}
+			</if>
+			<if test="query.targetNickName != null and query.targetNickName!=''">
+				 and  c.target_nick_name = #{query.targetNickName}
+			</if>
+			<if test="query.sessionType != null">
+				 and  c.session_type = #{query.sessionType}
+			</if>
+			<if test="query.botCategory != null and query.botCategory!=''">
+				 and  c.bot_category = #{query.botCategory}
+			</if>
+			<if test="query.templateId != null and query.templateId!=''">
+				 and  c.template_id = #{query.templateId}
+			</if>
+			<if test="query.botPersonality != null and query.botPersonality!=''">
+				 and  c.bot_personality = #{query.botPersonality}
+			</if>
+			<if test="query.botAvatarPath != null and query.botAvatarPath!=''">
+				 and  c.bot_avatar_path = #{query.botAvatarPath}
+			</if>
+			<if test="query.botName != null and query.botName!=''">
+				 and  c.bot_name = #{query.botName}
+			</if>
+			<if test="query.botDescription != null and query.botDescription!=''">
+				 and  c.bot_description = #{query.botDescription}
+			</if>
+			<if test="query.botSystemPrompt != null and query.botSystemPrompt!=''">
+				 and  c.bot_system_prompt = #{query.botSystemPrompt}
+			</if>
+			<if test="query.botWelcomeMsg != null and query.botWelcomeMsg!=''">
+				 and  c.bot_welcome_msg = #{query.botWelcomeMsg}
+			</if>
+			<if test="query.lastMessage != null and query.lastMessage!=''">
+				 and  c.last_message = #{query.lastMessage}
+			</if>
+			<if test="query.lastMessageTime != null">
+				 and  c.last_message_time = #{query.lastMessageTime}
+			</if>
+	</sql>
+
+	<!-- 通用查询条件列-->
+	<sql id="query_condition">
+	 <where>
+			<include refid="base_condition_filed" />
+			<if test="query.sessionIdFuzzy!= null  and query.sessionIdFuzzy!=''">
+				 and  c.session_id like concat('%', #{query.sessionIdFuzzy}, '%')
+			</if>
+			<if test="query.userIdFuzzy!= null  and query.userIdFuzzy!=''">
+				 and  c.user_id like concat('%', #{query.userIdFuzzy}, '%')
+			</if>
+			<if test="query.targetUserIdFuzzy!= null  and query.targetUserIdFuzzy!=''">
+				 and  c.target_user_id like concat('%', #{query.targetUserIdFuzzy}, '%')
+			</if>
+			<if test="query.targetNickNameFuzzy!= null  and query.targetNickNameFuzzy!=''">
+				 and  c.target_nick_name like concat('%', #{query.targetNickNameFuzzy}, '%')
+			</if>
+			<if test="query.botCategoryFuzzy!= null  and query.botCategoryFuzzy!=''">
+				 and  c.bot_category like concat('%', #{query.botCategoryFuzzy}, '%')
+			</if>
+			<if test="query.templateIdFuzzy!= null  and query.templateIdFuzzy!=''">
+				 and  c.template_id like concat('%', #{query.templateIdFuzzy}, '%')
+			</if>
+			<if test="query.botPersonalityFuzzy!= null  and query.botPersonalityFuzzy!=''">
+				 and  c.bot_personality like concat('%', #{query.botPersonalityFuzzy}, '%')
+			</if>
+			<if test="query.botAvatarPathFuzzy!= null  and query.botAvatarPathFuzzy!=''">
+				 and  c.bot_avatar_path like concat('%', #{query.botAvatarPathFuzzy}, '%')
+			</if>
+			<if test="query.botNameFuzzy!= null  and query.botNameFuzzy!=''">
+				 and  c.bot_name like concat('%', #{query.botNameFuzzy}, '%')
+			</if>
+			<if test="query.botDescriptionFuzzy!= null  and query.botDescriptionFuzzy!=''">
+				 and  c.bot_description like concat('%', #{query.botDescriptionFuzzy}, '%')
+			</if>
+			<if test="query.botSystemPromptFuzzy!= null  and query.botSystemPromptFuzzy!=''">
+				 and  c.bot_system_prompt like concat('%', #{query.botSystemPromptFuzzy}, '%')
+			</if>
+			<if test="query.botWelcomeMsgFuzzy!= null  and query.botWelcomeMsgFuzzy!=''">
+				 and  c.bot_welcome_msg like concat('%', #{query.botWelcomeMsgFuzzy}, '%')
+			</if>
+			<if test="query.lastMessageFuzzy!= null  and query.lastMessageFuzzy!=''">
+				 and  c.last_message like concat('%', #{query.lastMessageFuzzy}, '%')
+			</if>
+	 </where>
+	</sql>
+
+	<!-- 查询集合-->
+	<select id="selectList" resultMap="base_result_map" >
+		 SELECT <include refid="base_column_list" /> FROM chat_session c <include refid="query_condition" />
+		 <if test="query.orderBy!=null">
+			 order by ${query.orderBy}
+		 </if>
+		 <if test="query.simplePage!=null">
+			 limit #{query.simplePage.start},#{query.simplePage.end}
+		 </if>
+	</select>
+
+	<!-- 查询数量-->
+	<select id="selectCount" resultType="java.lang.Integer" >
+		 SELECT count(1) FROM chat_session c <include refid="query_condition" />
+	</select>
+
+	<!-- 插入 （匹配有值的字段）-->
+	<insert id="insert" parameterType="com.meetchat.entity.po.ChatSession">
+		 INSERT INTO chat_session
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="bean.sessionId != null">
+				 session_id,
+			</if>
+			<if test="bean.userId != null">
+				 user_id,
+			</if>
+			<if test="bean.targetUserId != null">
+				 target_user_id,
+			</if>
+			<if test="bean.targetNickName != null">
+				 target_nick_name,
+			</if>
+			<if test="bean.sessionType != null">
+				 session_type,
+			</if>
+			<if test="bean.botCategory != null">
+				 bot_category,
+			</if>
+			<if test="bean.templateId != null">
+				 template_id,
+			</if>
+			<if test="bean.botPersonality != null">
+				 bot_personality,
+			</if>
+			<if test="bean.botAvatarPath != null">
+				 bot_avatar_path,
+			</if>
+			<if test="bean.botName != null">
+				 bot_name,
+			</if>
+			<if test="bean.botDescription != null">
+				 bot_description,
+			</if>
+			<if test="bean.botSystemPrompt != null">
+				 bot_system_prompt,
+			</if>
+			<if test="bean.botWelcomeMsg != null">
+				 bot_welcome_msg,
+			</if>
+			<if test="bean.lastMessage != null">
+				 last_message,
+			</if>
+			<if test="bean.lastMessageTime != null">
+				 last_message_time,
+			</if>
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="bean.sessionId!=null">
+				 #{bean.sessionId},
+			</if>
+			<if test="bean.userId!=null">
+				 #{bean.userId},
+			</if>
+			<if test="bean.targetUserId!=null">
+				 #{bean.targetUserId},
+			</if>
+			<if test="bean.targetNickName!=null">
+				 #{bean.targetNickName},
+			</if>
+			<if test="bean.sessionType!=null">
+				 #{bean.sessionType},
+			</if>
+			<if test="bean.botCategory!=null">
+				 #{bean.botCategory},
+			</if>
+			<if test="bean.templateId!=null">
+				 #{bean.templateId},
+			</if>
+			<if test="bean.botPersonality!=null">
+				 #{bean.botPersonality},
+			</if>
+			<if test="bean.botAvatarPath!=null">
+				 #{bean.botAvatarPath},
+			</if>
+			<if test="bean.botName!=null">
+				 #{bean.botName},
+			</if>
+			<if test="bean.botDescription!=null">
+				 #{bean.botDescription},
+			</if>
+			<if test="bean.botSystemPrompt!=null">
+				 #{bean.botSystemPrompt},
+			</if>
+			<if test="bean.botWelcomeMsg!=null">
+				 #{bean.botWelcomeMsg},
+			</if>
+			<if test="bean.lastMessage!=null">
+				 #{bean.lastMessage},
+			</if>
+			<if test="bean.lastMessageTime!=null">
+				 #{bean.lastMessageTime},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段）-->
+	<insert id="insertOrUpdate" parameterType="com.meetchat.entity.po.ChatSession">
+		 INSERT INTO chat_session
+		 <trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.sessionId != null">
+				 session_id,
+			</if>
+			<if test="bean.userId != null">
+				 user_id,
+			</if>
+			<if test="bean.targetUserId != null">
+				 target_user_id,
+			</if>
+			<if test="bean.targetNickName != null">
+				 target_nick_name,
+			</if>
+			<if test="bean.sessionType != null">
+				 session_type,
+			</if>
+			<if test="bean.botCategory != null">
+				 bot_category,
+			</if>
+			<if test="bean.templateId != null">
+				 template_id,
+			</if>
+			<if test="bean.botPersonality != null">
+				 bot_personality,
+			</if>
+			<if test="bean.botAvatarPath != null">
+				 bot_avatar_path,
+			</if>
+			<if test="bean.botName != null">
+				 bot_name,
+			</if>
+			<if test="bean.botDescription != null">
+				 bot_description,
+			</if>
+			<if test="bean.botSystemPrompt != null">
+				 bot_system_prompt,
+			</if>
+			<if test="bean.botWelcomeMsg != null">
+				 bot_welcome_msg,
+			</if>
+			<if test="bean.lastMessage != null">
+				 last_message,
+			</if>
+			<if test="bean.lastMessageTime != null">
+				 last_message_time,
+			</if>
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.sessionId!=null">
+				 #{bean.sessionId},
+			</if>
+			<if test="bean.userId!=null">
+				 #{bean.userId},
+			</if>
+			<if test="bean.targetUserId!=null">
+				 #{bean.targetUserId},
+			</if>
+			<if test="bean.targetNickName!=null">
+				 #{bean.targetNickName},
+			</if>
+			<if test="bean.sessionType!=null">
+				 #{bean.sessionType},
+			</if>
+			<if test="bean.botCategory!=null">
+				 #{bean.botCategory},
+			</if>
+			<if test="bean.templateId!=null">
+				 #{bean.templateId},
+			</if>
+			<if test="bean.botPersonality!=null">
+				 #{bean.botPersonality},
+			</if>
+			<if test="bean.botAvatarPath!=null">
+				 #{bean.botAvatarPath},
+			</if>
+			<if test="bean.botName!=null">
+				 #{bean.botName},
+			</if>
+			<if test="bean.botDescription!=null">
+				 #{bean.botDescription},
+			</if>
+			<if test="bean.botSystemPrompt!=null">
+				 #{bean.botSystemPrompt},
+			</if>
+			<if test="bean.botWelcomeMsg!=null">
+				 #{bean.botWelcomeMsg},
+			</if>
+			<if test="bean.lastMessage!=null">
+				 #{bean.lastMessage},
+			</if>
+			<if test="bean.lastMessageTime!=null">
+				 #{bean.lastMessageTime},
+			</if>
+		 </trim>
+		 on DUPLICATE key update
+		 <trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.sessionId!=null">
+				 session_id = VALUES(session_id),
+			</if>
+			<if test="bean.userId!=null">
+				 user_id = VALUES(user_id),
+			</if>
+			<if test="bean.targetUserId!=null">
+				 target_user_id = VALUES(target_user_id),
+			</if>
+			<if test="bean.targetNickName!=null">
+				 target_nick_name = VALUES(target_nick_name),
+			</if>
+			<if test="bean.sessionType!=null">
+				 session_type = VALUES(session_type),
+			</if>
+			<if test="bean.botCategory!=null">
+				 bot_category = VALUES(bot_category),
+			</if>
+			<if test="bean.templateId!=null">
+				 template_id = VALUES(template_id),
+			</if>
+			<if test="bean.botPersonality!=null">
+				 bot_personality = VALUES(bot_personality),
+			</if>
+			<if test="bean.botAvatarPath!=null">
+				 bot_avatar_path = VALUES(bot_avatar_path),
+			</if>
+			<if test="bean.botName!=null">
+				 bot_name = VALUES(bot_name),
+			</if>
+			<if test="bean.botDescription!=null">
+				 bot_description = VALUES(bot_description),
+			</if>
+			<if test="bean.botSystemPrompt!=null">
+				 bot_system_prompt = VALUES(bot_system_prompt),
+			</if>
+			<if test="bean.botWelcomeMsg!=null">
+				 bot_welcome_msg = VALUES(bot_welcome_msg),
+			</if>
+			<if test="bean.lastMessage!=null">
+				 last_message = VALUES(last_message),
+			</if>
+			<if test="bean.lastMessageTime!=null">
+				 last_message_time = VALUES(last_message_time),
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 添加 （批量插入）-->
+	<insert id="insertBatch" parameterType="com.meetchat.entity.po.ChatSession">
+		 INSERT INTO chat_session(
+			 session_id,
+			 user_id,
+			 target_user_id,
+			 target_nick_name,
+			 session_type,
+			 bot_category,
+			 template_id,
+			 bot_personality,
+			 bot_avatar_path,
+			 bot_name,
+			 bot_description,
+			 bot_system_prompt,
+			 bot_welcome_msg,
+			 last_message,
+			 last_message_time
+		 )values
+		 <foreach collection="list" item="item" separator=",">
+			 (
+				 #{item.sessionId},
+				 #{item.userId},
+				 #{item.targetUserId},
+				 #{item.targetNickName},
+				 #{item.sessionType},
+				 #{item.botCategory},
+				 #{item.templateId},
+				 #{item.botPersonality},
+				 #{item.botAvatarPath},
+				 #{item.botName},
+				 #{item.botDescription},
+				 #{item.botSystemPrompt},
+				 #{item.botWelcomeMsg},
+				 #{item.lastMessage},
+				 #{item.lastMessageTime}
+			 )
+		 </foreach>
+	</insert>
+
+	<!-- 批量新增修改 （批量插入）-->
+	<insert id="insertOrUpdateBatch" parameterType="com.meetchat.entity.po.ChatSession">
+		 INSERT INTO chat_session(
+			 session_id,
+			 user_id,
+			 target_user_id,
+			 target_nick_name,
+			 session_type,
+			 bot_category,
+			 template_id,
+			 bot_personality,
+			 bot_avatar_path,
+			 bot_name,
+			 bot_description,
+			 bot_system_prompt,
+			 bot_welcome_msg,
+			 last_message,
+			 last_message_time
+		 )values
+		 <foreach collection="list" item="item" separator=",">
+			 (
+				 #{item.sessionId},
+				 #{item.userId},
+				 #{item.targetUserId},
+				 #{item.targetNickName},
+				 #{item.sessionType},
+				 #{item.botCategory},
+				 #{item.templateId},
+				 #{item.botPersonality},
+				 #{item.botAvatarPath},
+				 #{item.botName},
+				 #{item.botDescription},
+				 #{item.botSystemPrompt},
+				 #{item.botWelcomeMsg},
+				 #{item.lastMessage},
+				 #{item.lastMessageTime}
+			 )
+		 </foreach>
+			on DUPLICATE key update 
+			session_id = VALUES(session_id),
+			user_id = VALUES(user_id),
+			target_user_id = VALUES(target_user_id),
+			target_nick_name = VALUES(target_nick_name),
+			session_type = VALUES(session_type),
+			bot_category = VALUES(bot_category),
+			template_id = VALUES(template_id),
+			bot_personality = VALUES(bot_personality),
+			bot_avatar_path = VALUES(bot_avatar_path),
+			bot_name = VALUES(bot_name),
+			bot_description = VALUES(bot_description),
+			bot_system_prompt = VALUES(bot_system_prompt),
+			bot_welcome_msg = VALUES(bot_welcome_msg),
+			last_message = VALUES(last_message),
+			last_message_time = VALUES(last_message_time)
+	</insert>
+
+	<!--多条件修改-->
+	<update id="updateByParam" parameterType="com.meetchat.entity.query.ChatSessionQuery">
+		 UPDATE chat_session c
+ 		 <set> 
+			<if test="bean.sessionId != null">
+				 session_id = #{bean.sessionId},
+			</if>
+			<if test="bean.userId != null">
+				 user_id = #{bean.userId},
+			</if>
+			<if test="bean.targetUserId != null">
+				 target_user_id = #{bean.targetUserId},
+			</if>
+			<if test="bean.targetNickName != null">
+				 target_nick_name = #{bean.targetNickName},
+			</if>
+			<if test="bean.sessionType != null">
+				 session_type = #{bean.sessionType},
+			</if>
+			<if test="bean.botCategory != null">
+				 bot_category = #{bean.botCategory},
+			</if>
+			<if test="bean.templateId != null">
+				 template_id = #{bean.templateId},
+			</if>
+			<if test="bean.botPersonality != null">
+				 bot_personality = #{bean.botPersonality},
+			</if>
+			<if test="bean.botAvatarPath != null">
+				 bot_avatar_path = #{bean.botAvatarPath},
+			</if>
+			<if test="bean.botName != null">
+				 bot_name = #{bean.botName},
+			</if>
+			<if test="bean.botDescription != null">
+				 bot_description = #{bean.botDescription},
+			</if>
+			<if test="bean.botSystemPrompt != null">
+				 bot_system_prompt = #{bean.botSystemPrompt},
+			</if>
+			<if test="bean.botWelcomeMsg != null">
+				 bot_welcome_msg = #{bean.botWelcomeMsg},
+			</if>
+			<if test="bean.lastMessage != null">
+				 last_message = #{bean.lastMessage},
+			</if>
+			<if test="bean.lastMessageTime != null">
+				 last_message_time = #{bean.lastMessageTime},
+			</if>
+ 		 </set>
+ 		 <include refid="query_condition" />
+	</update>
+
+	<!--多条件删除-->
+	<delete id="deleteByParam">
+		 delete c from chat_session c
+ 		 <include refid="query_condition" />
+	</delete>
+
+	<!-- 根据SessionId修改-->
+	<update id="updateBySessionId" parameterType="com.meetchat.entity.po.ChatSession">
+		 UPDATE chat_session
+ 		 <set> 
+			<if test="bean.userId != null">
+				 user_id = #{bean.userId},
+			</if>
+			<if test="bean.targetUserId != null">
+				 target_user_id = #{bean.targetUserId},
+			</if>
+			<if test="bean.targetNickName != null">
+				 target_nick_name = #{bean.targetNickName},
+			</if>
+			<if test="bean.sessionType != null">
+				 session_type = #{bean.sessionType},
+			</if>
+			<if test="bean.botCategory != null">
+				 bot_category = #{bean.botCategory},
+			</if>
+			<if test="bean.templateId != null">
+				 template_id = #{bean.templateId},
+			</if>
+			<if test="bean.botPersonality != null">
+				 bot_personality = #{bean.botPersonality},
+			</if>
+			<if test="bean.botAvatarPath != null">
+				 bot_avatar_path = #{bean.botAvatarPath},
+			</if>
+			<if test="bean.botName != null">
+				 bot_name = #{bean.botName},
+			</if>
+			<if test="bean.botDescription != null">
+				 bot_description = #{bean.botDescription},
+			</if>
+			<if test="bean.botSystemPrompt != null">
+				 bot_system_prompt = #{bean.botSystemPrompt},
+			</if>
+			<if test="bean.botWelcomeMsg != null">
+				 bot_welcome_msg = #{bean.botWelcomeMsg},
+			</if>
+			<if test="bean.lastMessage != null">
+				 last_message = #{bean.lastMessage},
+			</if>
+			<if test="bean.lastMessageTime != null">
+				 last_message_time = #{bean.lastMessageTime},
+			</if>
+ 		 </set>
+ 		 where session_id=#{sessionId}
+	</update>
+
+	<!-- 根据SessionId删除-->
+	<delete id="deleteBySessionId">
+		delete from chat_session where session_id=#{sessionId}
+	</delete>
+
+	<!-- 根据SessionId获取对象（session_id不再唯一，取第一条）-->
+	<select id="selectBySessionId" resultMap="base_result_map" >
+		select <include refid="base_column_list" /> from chat_session c where session_id=#{sessionId} LIMIT 1
+	</select>
+
+	<!-- 根据UserIdAndTargetUserId修改-->
+	<update id="updateByUserIdAndTargetUserId" parameterType="com.meetchat.entity.po.ChatSession">
+		 UPDATE chat_session
+ 		 <set> 
+			<if test="bean.sessionId != null">
+				 session_id = #{bean.sessionId},
+			</if>
+			<if test="bean.targetNickName != null">
+				 target_nick_name = #{bean.targetNickName},
+			</if>
+			<if test="bean.sessionType != null">
+				 session_type = #{bean.sessionType},
+			</if>
+			<if test="bean.botCategory != null">
+				 bot_category = #{bean.botCategory},
+			</if>
+			<if test="bean.templateId != null">
+				 template_id = #{bean.templateId},
+			</if>
+			<if test="bean.botPersonality != null">
+				 bot_personality = #{bean.botPersonality},
+			</if>
+			<if test="bean.botAvatarPath != null">
+				 bot_avatar_path = #{bean.botAvatarPath},
+			</if>
+			<if test="bean.botName != null">
+				 bot_name = #{bean.botName},
+			</if>
+			<if test="bean.botDescription != null">
+				 bot_description = #{bean.botDescription},
+			</if>
+			<if test="bean.botSystemPrompt != null">
+				 bot_system_prompt = #{bean.botSystemPrompt},
+			</if>
+			<if test="bean.botWelcomeMsg != null">
+				 bot_welcome_msg = #{bean.botWelcomeMsg},
+			</if>
+			<if test="bean.lastMessage != null">
+				 last_message = #{bean.lastMessage},
+			</if>
+			<if test="bean.lastMessageTime != null">
+				 last_message_time = #{bean.lastMessageTime},
+			</if>
+ 		 </set>
+ 		 where user_id=#{userId} and target_user_id=#{targetUserId}
+	</update>
+
+	<!-- 根据UserIdAndTargetUserId删除-->
+	<delete id="deleteByUserIdAndTargetUserId">
+		delete from chat_session where user_id=#{userId} and target_user_id=#{targetUserId}
+	</delete>
+
+	<!-- 根据PrimaryKey获取对象-->
+	<select id="selectByUserIdAndTargetUserId" resultMap="base_result_map" >
+		select <include refid="base_column_list" /> from chat_session c where user_id=#{userId} and target_user_id=#{targetUserId}
+	</select>
+
+</mapper>

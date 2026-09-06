@@ -1,0 +1,23 @@
+# Build output
+target/
+out/
+build/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Logs
+*.log
+log.path_IS_UNDEFINED/
+
+# Runtime data
+volumes/
+
+# Sensitive config (use application.properties.example as template)
+src/main/resources/application.properties
+
+# OS
+.DS_Store
+Thumbs.db
