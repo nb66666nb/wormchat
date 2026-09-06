@@ -1,8 +1,19 @@
-# 基于 Java、Spring、Netty、Vue、Electron、WebSocket、LLM、MCP 的 IM 聊天（虫聊）WormChat
+<p align="center">
+  <img src="docs/images/logo.png" alt="WormChat Logo" width="120"/>
+</p>
 
-**WormChat（虫聊）** 是一个全栈即时通讯与音视频会议系统，包含 Electron 桌面客户端与服务端，支持单聊 / 群聊 / AI 机器人对话与多人视频会议。
+<h1 align="center">基于 Java、Spring、Netty、Vue、Electron、WebSocket、LLM、MCP 的 IM 聊天（虫聊）WormChat</h1>
 
-![Arch](https://img.shields.io/badge/Backend-Java%2011%20%2B%20Netty%20%2B%20SpringBoot-orange) ![Front](https://img.shields.io/badge/Frontend-Electron%20%2B%20Vue3%20%2B%20Vite-blue) ![DB](https://img.shields.io/badge/Storage-MySQL%20%2B%20Redis%20%2B%20SQLite%20%2B%20Milvus-green)
+<p align="center">
+  **WormChat（虫聊）** 是一个全栈即时通讯与音视频会议系统，支持单聊 / 群聊 / AI 机器人对话与多人视频会议
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Backend-Java%20%2B%20Netty%20%2B%20SpringBoot-orange" alt="Backend"/>
+  <img src="https://img.shields.io/badge/Frontend-Electron%20%2B%20Vue3%20%2B%20Vite-blue" alt="Frontend"/>
+  <img src="https://img.shields.io/badge/Storage-MySQL%20%2B%20Redis%20%2B%20SQLite%20%2B%20Milvus-green" alt="Storage"/>
+  <img src="https://img.shields.io/badge/AI-LLM%20%2B%20RAG%20%2B%20MCP-purple" alt="AI"/>
+</p>
 
 ## 功能演示
 
