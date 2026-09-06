@@ -7,13 +7,14 @@
   python insert_loadtest.py 1001 3000     # 插入 loadtest1001 ~ loadtest3000
 密码统一 test123456 (MD5: 47ec2dd791e31e2ef2076caf64ed9b3d)
 """
+import os
 import subprocess
 import sys
 
 MYSQL = r"C:\Mysql\bin\mysql.exe"
 DB = "easymetting"
-USER = "root"
-PWD = "2233"
+USER = os.environ.get("MYSQL_USER", "root")
+PWD = os.environ.get("MYSQL_PWD", "")
 MD5 = "47ec2dd791e31e2ef2076caf64ed9b3d"
 
 

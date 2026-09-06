@@ -1,4 +1,4 @@
-﻿# \u5E94\u7528\u670D\u52A1 WEB \u8BBF\u95EE\u7AEF\u53E3
+# \u5E94\u7528\u670D\u52A1 WEB \u8BBF\u95EE\u7AEF\u53E3
 server.port=6060
 ws.port=6061
 #WebSocket\u96C6\u7FA4\u5E7F\u64AD\u5F00\u5173\uFF08\u5355\u673A\u90E8\u7F72\u53EF\u7F6Efalse\uFF0C\u8DF3\u8FC7MQ\u76F4\u63A5\u672C\u5730\u63A8\u9001\u964D\u4F4E\u5EF6\u8FDF\uFF09
@@ -34,7 +34,7 @@ spring.web.resources.add-mappings=false
 spring.datasource.url=jdbc:mysql://127.0.0.1:3306/easymetting?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true\
   &useSSL=false
 spring.datasource.username=root
-spring.datasource.password=2233
+spring.datasource.password=YOUR_MYSQL_PASSWORD
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.datasource.hikari.pool-name=HikariCPDatasource
 spring.datasource.hikari.minimum-idle=5
