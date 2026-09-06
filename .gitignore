@@ -1,0 +1,8 @@
+node_modules
+dist
+out
+installPackages
+resources/ffmpeg
+.DS_Store
+.eslintcache
+*.log*
