@@ -4,6 +4,23 @@
 
 ![Arch](https://img.shields.io/badge/Backend-Java%2011%20%2B%20Netty%20%2B%20SpringBoot-orange) ![Front](https://img.shields.io/badge/Frontend-Electron%20%2B%20Vue3%20%2B%20Vite-blue) ![DB](https://img.shields.io/badge/Storage-MySQL%20%2B%20Redis%20%2B%20SQLite%20%2B%20Milvus-green)
 
+## 功能演示
+
+> 录屏文件已放入 `docs/demo/`（本地不删可传仓库，或用下方 GitHub 附件链接）
+
+| 功能 | 演示 |
+|------|------|
+| IM 单聊 / 群聊 | `docs/demo/chat.mp4` |
+| AI 机器人对话 | `docs/demo/robot.mp4` |
+| 多人视频会议 | `docs/demo/meeting.mp4` |
+| 管理后台 | `docs/demo/admin.mp4` |
+
+**客户端界面预览：**
+
+| 登录 | 消息 | 会议 | 机器人 |
+|:---:|:---:|:---:|:---:|
+| ![](docs/images/login.png) | ![](docs/images/chat.png) | ![](docs/images/meeting.png) | ![](docs/images/robot.png) |
+
 ## 系统架构
 
 ```
