@@ -1,4 +1,4 @@
-# 基于 Java、Netty、SpringBoot 的 IM 聊天（虫聊）系统软件
+# 基于 Java、Spring、Netty、Vue、Electron、WebSocket、LLM、MCP 的 IM 聊天（虫聊）WormChat
 
 **WormChat（虫聊）** 是一个全栈即时通讯与音视频会议系统，包含 Electron 桌面客户端与服务端，支持单聊 / 群聊 / AI 机器人对话与多人视频会议。
 
@@ -92,29 +92,160 @@ wormchat/
 
 ## 快速开始
 
-### 1. 启动后端
+### 1. 准备环境
+
+| 组件 | 要求 | 用途 |
+|------|------|------|
+| JDK | 8+ | 运行后端 |
+| Maven | 3.6+ | 构建后端 |
+| Node.js | >= 18 | 构建前端 |
+| MySQL | 8.0 | 业务库 + 消息分表（**必需**） |
+| Redis | 5.0+ | 会话/Token/缓存（**必需**） |
+| RabbitMQ | 3.8+ | 集群广播/AI 异步回复（单机可不用，见下方说明） |
+| Milvus | 2.4+ | RAG 向量检索（**可选**，不用 AI 知识库可不装） |
+
+### 2. 初始化数据库
+
+```bash
+mysql -u root -p -e "CREATE DATABASE easymetting DEFAULT CHARACTER SET utf8mb4;"
+# 按需执行 backend/sql/ 下的脚本建表
+mysql -u root -p easymetting < backend/sql/group_chat.sql
+```
+
+### 3. 配置并启动后端
 
 ```bash
 cd backend
-
-# 配置（填写 MySQL/Redis/RabbitMQ 连接与 LLM API Key）
 cp src/main/resources/application.properties.example src/main/resources/application.properties
-
-# 初始化数据库（按需执行 sql/ 下脚本）
-mvn spring-boot:run        # HTTP 6060 /api，WebSocket 6061
+# 编辑 application.properties，必填项见下方【后端配置详解】
+mvn spring-boot:run
 ```
 
-### 2. 启动客户端
+### 4. 启动客户端
 
 ```bash
 cd frontend
 npm install
-npm run dev                # 首次启动在登录页配置服务器地址
+npm run dev                # 首次启动在登录页「服务器配置」填后端地址
 ```
 
 详细说明见各子目录 README：
 - [frontend/README.md](frontend/README.md)
 - [backend/README.md](backend/README.md)
+
+## 后端配置详解
+
+完整配置文件 `backend/src/main/resources/application.properties`（由 `.example` 模板复制而来）。**带 ❗ 的为必填项**：
+
+### 完整配置文件
+
+```properties
+# ==================== 服务端口 ====================
+# 应用 HTTP 端口（前端请求 http://<服务器IP>:6060/api）
+server.port=6060
+# Netty WebSocket 端口（前端 IM 长连接）
+ws.port=6061
+# HTTP 接口统一前缀
+server.servlet.context-path=/api
+
+# ==================== MySQL 数据库（❗必填） ====================
+# 127.0.0.1:3306 换成你的 MySQL 地址，easymetting 换成库名
+spring.datasource.url=jdbc:mysql://127.0.0.1:3306/easymetting?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true\
+  &useSSL=false
+# 数据库用户名
+spring.datasource.username=root
+# 数据库密码（改成你自己的）
+spring.datasource.password=YOUR_MYSQL_PASSWORD
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+# 连接池（默认值即可，高并发可调大 maximum-pool-size）
+spring.datasource.hikari.maximum-pool-size=80
+
+# ==================== Redis（❗必填） ====================
+# Redis 地址与端口
+spring.redis.host=127.0.0.1
+spring.redis.port=6379
+spring.redis.database=0
+
+# ==================== RabbitMQ（单机部署可保持默认） ====================
+# 单机部署时将下方 ws.broadcast.enabled 改为 false，可完全不装 RabbitMQ
+spring.rabbitmq.host=localhost
+spring.rabbitmq.port=5672
+spring.rabbitmq.username=guest
+spring.rabbitmq.password=guest
+spring.rabbitmq.virtual-host=/
+# 消息转发通道：redis 或 rabbitmq（单机用 redis 即可）
+messaging.handle.channel=redis
+# WebSocket 集群广播开关（单机部署置 false，跳过 MQ 直接本地推送降低延迟）
+ws.broadcast.enabled=true
+
+# ==================== 管理员账号（❗必填） ====================
+# 管理员邮箱白名单：列入此处的注册用户将拥有管理后台权限
+# 多个用逗号分隔，如：admin@qq.com,root@test.com
+# 用户需先用该邮箱注册，再用邮箱+密码登录即可进管理后台
+admin.emails=admin@qq.com
+
+# ==================== LLM API Key（❗AI 功能必填） ====================
+# 获取地址：https://bailian.console.aliyun.com/ 控制台 -> API-KEY 管理
+# 不用 AI 机器人功能可留空（空则 AI 对话降级为默认回复）
+ai.llm.api-key=YOUR_DASHSCOPE_API_KEY
+# OpenAI 兼容接口地址（默认阿里云 DashScope，可换成任意兼容服务如 DeepSeek/本地 Ollama）
+ai.llm.base-url=https://dashscope.aliyuncs.com/compatible-mode/v1
+# 模型名（DashScope 下可换 qwen-turbo / qwen-plus / qwen-max 等）
+ai.llm.model=qwen3.6-plus
+# 单次回复最大 token 数与温度
+ai.llm.max-tokens=1024
+ai.llm.temperature=0.8
+# RAG 知识库开关（不用可置 false，则无需 Milvus）
+ai.rag.enabled=true
+# MCP 工具调用开关（时间查询、会议查询等 Agent 工具）
+ai.mcp.enabled=true
+ai.llm.timeout-seconds=60
+ai.agent.max-iterations=5
+
+# ==================== Milvus 向量库（仅 RAG 开启时需要） ====================
+rag.vector.enabled=true
+rag.keyword.enabled=true
+rag.milvus.host=localhost
+rag.milvus.port=19530
+rag.milvus.collection-name=rag_documents
+
+# ==================== AI 限流（默认即可） ====================
+# 用户消息频率（条/分钟）
+ratelimit.user.message-per-minute=20
+# Agent 并发执行数
+ratelimit.agent.concurrent=10
+# LLM 全局 QPS
+ratelimit.llm.qps=50
+ratelimit.profile.cooldown-seconds=60
+
+# ==================== 文件存储 ====================
+# 上传文件的存储目录（自动创建，Windows 用 D:/xxx 格式，Linux 用 /home/xxx）
+project.folder=D:/meetchat-Localfiles
+spring.servlet.multipart.max-file-size=500MB
+file.chunk.size=5242880
+
+# ==================== 其他（默认即可） ====================
+# 雪花算法 workerId（单机 -1 自动推导；集群部署各节点必须指定不同的 0-1023）
+snowflake.worker-id=-1
+# 日志级别（调试期 debug，生产建议 info）
+log.root.level=debug
+# ACK 超时重推（指数退避 3s/6s/12s）
+ws.retry.initial-delay-ms=3000
+ws.retry.max-attempts=3
+```
+
+### 关键配置速查
+
+| 你想做什么 | 改哪里 |
+|-----------|--------|
+| 连接自己的 MySQL | `spring.datasource.url` / `username` / `password` |
+| 连接自己的 Redis | `spring.redis.host` / `port` |
+| 设置管理员账号 | `admin.emails` 填邮箱 → 用该邮箱**注册** → 登录即有管理后台 |
+| 填 AI API Key | `ai.llm.api-key`（阿里云百炼控制台获取） |
+| 换 LLM 供应商 | `ai.llm.base-url` + `ai.llm.model`（OpenAI 兼容协议即可） |
+| 不装 RabbitMQ | `ws.broadcast.enabled=false` + `messaging.handle.channel=redis` |
+| 不装 Milvus | `ai.rag.enabled=false` + `rag.vector.enabled=false` |
+| 单机最小依赖 | 只装 MySQL + Redis 即可跑通（AI 功能再装 Milvus） |
 
 ## 获取打包文件
 
