@@ -1,0 +1,59 @@
+name: Frontend Build (Electron)
+
+# 前端打包：手动触发 或 打 front-v* / v* 标签时自动构建发布
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'front-v*'
+      - 'v*'
+
+jobs:
+  build-windows:
+    name: Build Windows Installer
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      # ffmpeg 可执行文件不入库，构建时下载放入 resources/ffmpeg
+      - name: Download ffmpeg
+        shell: bash
+        run: |
+          curl -L -o ffmpeg.zip https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-lgpl.zip
+          unzip -j ffmpeg.zip "*/bin/ffmpeg.exe" "*/bin/ffprobe.exe" -d resources/ffmpeg
+          ls -la resources/ffmpeg
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Windows installer
+        run: npm run build:win
+        env:
+          # electron-builder 下载加速
+          ELECTRON_MIRROR: https://npmmirror.com/mirrors/electron/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wormchat-frontend-windows
+          path: frontend/installPackages/*-setup.exe
+          if-no-files-found: error
+
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: frontend/installPackages/*-setup.exe
+          generate_release_notes: true

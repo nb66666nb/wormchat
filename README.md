@@ -116,6 +116,34 @@ npm run dev                # 首次启动在登录页配置服务器地址
 - [frontend/README.md](frontend/README.md)
 - [backend/README.md](backend/README.md)
 
+## 获取打包文件
+
+前后端可**分别构建、分别下载**，两种方式：
+
+### 方式一：Releases 下载（无需登录，推荐）
+
+打标签自动触发构建并发布到 [Releases](https://github.com/nb66666nb/wormchat/releases)：
+
+```bash
+# 仅构建前端（产出 WormChat-x.x.x-setup.exe 安装包）
+git tag front-v1.0.0 && git push origin front-v1.0.0
+
+# 仅构建后端（产出可执行 jar）
+git tag backend-v1.0.0 && git push origin backend-v1.0.0
+
+# 前后端同时构建
+git tag v1.0.0 && git push origin v1.0.0
+```
+
+### 方式二：Actions 手动构建
+
+进入 [Actions](https://github.com/nb66666nb/wormchat/actions) 页面 → 选择 **Frontend Build (Electron)** 或 **Backend Build (Spring Boot)** → Run workflow → 构建完成后在该次运行页面底部下载 artifact（需登录 GitHub 账号）。
+
+| Workflow | 产物 | 说明 |
+|----------|------|------|
+| Frontend Build | `WormChat-x.x.x-setup.exe` | Windows NSIS 安装包（含 ffmpeg） |
+| Backend Build | `wormchat-1.0.jar` | Spring Boot 可执行 jar，`java -jar` 直接运行 |
+
 ## 性能与压测
 
 - 内置 JMeter 压测方案：千级账号自动生成（`backend/sql/insert_loadtest.py`）、IM 发消息脚本
