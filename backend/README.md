@@ -2,7 +2,7 @@
 
 基于 **Spring Boot + Netty** 的即时通讯与音视频会议服务端。
 
-> 前端仓库：[wormchat-front](https://github.com/nb66666nb/wormchat-front)（Electron + Vue 3 桌面客户端）
+> 前端仓库：[../frontend](../frontend)（Electron + Vue 3 桌面客户端）
 
 ## 功能特性
 

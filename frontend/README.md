@@ -2,7 +2,7 @@
 
 基于 **Electron + Vue 3** 的即时通讯与音视频会议桌面客户端。
 
-> 后端仓库：[wormchat-backend](https://github.com/nb66666nb/wormchat-backend)（Spring Boot + Netty WebSocket）
+> 后端仓库：[../backend](../backend)（Spring Boot + Netty WebSocket）
 
 ## 功能特性
 
