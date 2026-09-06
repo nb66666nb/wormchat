@@ -1,0 +1,473 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetchat.mappers.MeetingMemberMapper">
+
+	<!--实体映射-->
+	<resultMap id="base_result_map" type="com.meetchat.entity.po.MeetingMember">
+		<!---->
+		<result column="meeting_id" property="meetingId"  />
+		<!---->
+		<result column="meeting_no" property="meetingNo"  />
+		<!---->
+		<result column="meeting_name" property="meetingName"  />
+		<!---->
+		<result column="create_time" property="createTime"  />
+		<!---->
+		<result column="create_user_id" property="createUserId"  />
+		<!---->
+		<result column="jion_type" property="jionType"  />
+		<!---->
+		<result column="jion_password" property="jionPassword"  />
+		<!---->
+		<result column="start_time" property="startTime"  />
+		<!---->
+		<result column="end_time" property="endTime"  />
+		<!---->
+		<result column="status" property="status"  />
+	</resultMap>
+
+
+	<!-- 通用查询结果列-->
+	<sql id="base_column_list">
+		 m.meeting_id,m.meeting_no,m.meeting_name,m.create_time,m.create_user_id,
+		 m.jion_type,m.jion_password,m.start_time,m.end_time,m.status
+		 
+	</sql>
+
+	<sql id="base_condition_filed">
+			<if test="query.meetingId != null and query.meetingId!=''">
+				 and  m.meeting_id = #{query.meetingId}
+			</if>
+			<if test="query.meetingNo != null and query.meetingNo!=''">
+				 and  m.meeting_no = #{query.meetingNo}
+			</if>
+			<if test="query.meetingName != null and query.meetingName!=''">
+				 and  m.meeting_name = #{query.meetingName}
+			</if>
+			<if test="query.createTime != null and query.createTime!=''">
+				 <![CDATA[ and  m.create_time=str_to_date(#{query.createTime}, '%Y-%m-%d') ]]>
+			</if>
+			<if test="query.createUserId != null and query.createUserId!=''">
+				 and  m.create_user_id = #{query.createUserId}
+			</if>
+			<if test="query.jionType != null">
+				 and  m.jion_type = #{query.jionType}
+			</if>
+			<if test="query.jionPassword != null and query.jionPassword!=''">
+				 and  m.jion_password = #{query.jionPassword}
+			</if>
+			<if test="query.startTime != null and query.startTime!=''">
+				 <![CDATA[ and  m.start_time=str_to_date(#{query.startTime}, '%Y-%m-%d') ]]>
+			</if>
+			<if test="query.endTime != null and query.endTime!=''">
+				 <![CDATA[ and  m.end_time=str_to_date(#{query.endTime}, '%Y-%m-%d') ]]>
+			</if>
+			<if test="query.status != null">
+				 and  m.status = #{query.status}
+			</if>
+	</sql>
+
+	<!-- 通用查询条件列-->
+	<sql id="query_condition">
+	 <where>
+			<include refid="base_condition_filed" />
+			<if test="query.meetingIdFuzzy!= null  and query.meetingIdFuzzy!=''">
+				 and  m.meeting_id like concat('%', #{query.meetingIdFuzzy}, '%')
+			</if>
+			<if test="query.meetingNoFuzzy!= null  and query.meetingNoFuzzy!=''">
+				 and  m.meeting_no like concat('%', #{query.meetingNoFuzzy}, '%')
+			</if>
+			<if test="query.meetingNameFuzzy!= null  and query.meetingNameFuzzy!=''">
+				 and  m.meeting_name like concat('%', #{query.meetingNameFuzzy}, '%')
+			</if>
+			<if test="query.createTimeStart!= null and query.createTimeStart!=''">
+				 <![CDATA[ and  m.create_time>=str_to_date(#{query.createTimeStart}, '%Y-%m-%d') ]]>
+			</if>
+			<if test="query.createTimeEnd!= null and query.createTimeEnd!=''">
+				 <![CDATA[ and  m.create_time< date_sub(str_to_date(#{query.createTimeEnd},'%Y-%m-%d'),interval -1 day) ]]>
+			</if>
+			<if test="query.createUserIdFuzzy!= null  and query.createUserIdFuzzy!=''">
+				 and  m.create_user_id like concat('%', #{query.createUserIdFuzzy}, '%')
+			</if>
+			<if test="query.jionPasswordFuzzy!= null  and query.jionPasswordFuzzy!=''">
+				 and  m.jion_password like concat('%', #{query.jionPasswordFuzzy}, '%')
+			</if>
+			<if test="query.startTimeStart!= null and query.startTimeStart!=''">
+				 <![CDATA[ and  m.start_time>=str_to_date(#{query.startTimeStart}, '%Y-%m-%d') ]]>
+			</if>
+			<if test="query.startTimeEnd!= null and query.startTimeEnd!=''">
+				 <![CDATA[ and  m.start_time< date_sub(str_to_date(#{query.startTimeEnd},'%Y-%m-%d'),interval -1 day) ]]>
+			</if>
+			<if test="query.endTimeStart!= null and query.endTimeStart!=''">
+				 <![CDATA[ and  m.end_time>=str_to_date(#{query.endTimeStart}, '%Y-%m-%d') ]]>
+			</if>
+			<if test="query.endTimeEnd!= null and query.endTimeEnd!=''">
+				 <![CDATA[ and  m.end_time< date_sub(str_to_date(#{query.endTimeEnd},'%Y-%m-%d'),interval -1 day) ]]>
+			</if>
+	 </where>
+	</sql>
+
+	<!-- 查询集合-->
+	<select id="selectList" resultMap="base_result_map" >
+		 SELECT <include refid="base_column_list" /> FROM meeting_member m <include refid="query_condition" />
+		 <if test="query.orderBy!=null">
+			 order by ${query.orderBy}
+		 </if>
+		 <if test="query.simplePage!=null">
+			 limit #{query.simplePage.start},#{query.simplePage.end}
+		 </if>
+	</select>
+
+	<!-- 查询数量-->
+	<select id="selectCount" resultType="java.lang.Integer" >
+		 SELECT count(1) FROM meeting_member m <include refid="query_condition" />
+	</select>
+
+	<!-- 插入 （匹配有值的字段）-->
+	<insert id="insert" parameterType="com.meetchat.entity.po.MeetingMember">
+		 INSERT INTO meeting_member
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="bean.meetingId != null">
+				 meeting_id,
+			</if>
+			<if test="bean.meetingNo != null">
+				 meeting_no,
+			</if>
+			<if test="bean.meetingName != null">
+				 meeting_name,
+			</if>
+			<if test="bean.createTime != null">
+				 create_time,
+			</if>
+			<if test="bean.createUserId != null">
+				 create_user_id,
+			</if>
+			<if test="bean.jionType != null">
+				 jion_type,
+			</if>
+			<if test="bean.jionPassword != null">
+				 jion_password,
+			</if>
+			<if test="bean.startTime != null">
+				 start_time,
+			</if>
+			<if test="bean.endTime != null">
+				 end_time,
+			</if>
+			<if test="bean.status != null">
+				 status,
+			</if>
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="bean.meetingId!=null">
+				 #{bean.meetingId},
+			</if>
+			<if test="bean.meetingNo!=null">
+				 #{bean.meetingNo},
+			</if>
+			<if test="bean.meetingName!=null">
+				 #{bean.meetingName},
+			</if>
+			<if test="bean.createTime!=null">
+				 #{bean.createTime},
+			</if>
+			<if test="bean.createUserId!=null">
+				 #{bean.createUserId},
+			</if>
+			<if test="bean.jionType!=null">
+				 #{bean.jionType},
+			</if>
+			<if test="bean.jionPassword!=null">
+				 #{bean.jionPassword},
+			</if>
+			<if test="bean.startTime!=null">
+				 #{bean.startTime},
+			</if>
+			<if test="bean.endTime!=null">
+				 #{bean.endTime},
+			</if>
+			<if test="bean.status!=null">
+				 #{bean.status},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段）-->
+	<insert id="insertOrUpdate" parameterType="com.meetchat.entity.po.MeetingMember">
+		 INSERT INTO meeting_member
+		 <trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.meetingId != null">
+				 meeting_id,
+			</if>
+			<if test="bean.meetingNo != null">
+				 meeting_no,
+			</if>
+			<if test="bean.meetingName != null">
+				 meeting_name,
+			</if>
+			<if test="bean.createTime != null">
+				 create_time,
+			</if>
+			<if test="bean.createUserId != null">
+				 create_user_id,
+			</if>
+			<if test="bean.jionType != null">
+				 jion_type,
+			</if>
+			<if test="bean.jionPassword != null">
+				 jion_password,
+			</if>
+			<if test="bean.startTime != null">
+				 start_time,
+			</if>
+			<if test="bean.endTime != null">
+				 end_time,
+			</if>
+			<if test="bean.status != null">
+				 status,
+			</if>
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.meetingId!=null">
+				 #{bean.meetingId},
+			</if>
+			<if test="bean.meetingNo!=null">
+				 #{bean.meetingNo},
+			</if>
+			<if test="bean.meetingName!=null">
+				 #{bean.meetingName},
+			</if>
+			<if test="bean.createTime!=null">
+				 #{bean.createTime},
+			</if>
+			<if test="bean.createUserId!=null">
+				 #{bean.createUserId},
+			</if>
+			<if test="bean.jionType!=null">
+				 #{bean.jionType},
+			</if>
+			<if test="bean.jionPassword!=null">
+				 #{bean.jionPassword},
+			</if>
+			<if test="bean.startTime!=null">
+				 #{bean.startTime},
+			</if>
+			<if test="bean.endTime!=null">
+				 #{bean.endTime},
+			</if>
+			<if test="bean.status!=null">
+				 #{bean.status},
+			</if>
+		 </trim>
+		 on DUPLICATE key update 
+		 <trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.meetingId!=null">
+				 meeting_id = VALUES(meeting_id),
+			</if>
+			<if test="bean.meetingNo!=null">
+				 meeting_no = VALUES(meeting_no),
+			</if>
+			<if test="bean.meetingName!=null">
+				 meeting_name = VALUES(meeting_name),
+			</if>
+			<if test="bean.createTime!=null">
+				 create_time = VALUES(create_time),
+			</if>
+			<if test="bean.createUserId!=null">
+				 create_user_id = VALUES(create_user_id),
+			</if>
+			<if test="bean.jionType!=null">
+				 jion_type = VALUES(jion_type),
+			</if>
+			<if test="bean.jionPassword!=null">
+				 jion_password = VALUES(jion_password),
+			</if>
+			<if test="bean.startTime!=null">
+				 start_time = VALUES(start_time),
+			</if>
+			<if test="bean.endTime!=null">
+				 end_time = VALUES(end_time),
+			</if>
+			<if test="bean.status!=null">
+				 status = VALUES(status),
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 添加 （批量插入）-->
+	<insert id="insertBatch" parameterType="com.meetchat.entity.po.MeetingMember">
+		 INSERT INTO meeting_member(
+			 meeting_id,
+			 meeting_no,
+			 meeting_name,
+			 create_time,
+			 create_user_id,
+			 jion_type,
+			 jion_password,
+			 start_time,
+			 end_time,
+			 status
+		 )values
+		 <foreach collection="list" item="item" separator=",">
+			 (
+				 #{item.meetingId},
+				 #{item.meetingNo},
+				 #{item.meetingName},
+				 #{item.createTime},
+				 #{item.createUserId},
+				 #{item.jionType},
+				 #{item.jionPassword},
+				 #{item.startTime},
+				 #{item.endTime},
+				 #{item.status}
+			 )
+		 </foreach>
+	</insert>
+
+	<!-- 批量新增修改 （批量插入）-->
+	<insert id="insertOrUpdateBatch" parameterType="com.meetchat.entity.po.MeetingMember">
+		 INSERT INTO meeting_member(
+			 meeting_id,
+			 meeting_no,
+			 meeting_name,
+			 create_time,
+			 create_user_id,
+			 jion_type,
+			 jion_password,
+			 start_time,
+			 end_time,
+			 status
+		 )values
+		 <foreach collection="list" item="item" separator=",">
+			 (
+				 #{item.meetingId},
+				 #{item.meetingNo},
+				 #{item.meetingName},
+				 #{item.createTime},
+				 #{item.createUserId},
+				 #{item.jionType},
+				 #{item.jionPassword},
+				 #{item.startTime},
+				 #{item.endTime},
+				 #{item.status}
+			 )
+		 </foreach>
+			on DUPLICATE key update 
+			meeting_id = VALUES(meeting_id),
+			meeting_no = VALUES(meeting_no),
+			meeting_name = VALUES(meeting_name),
+			create_time = VALUES(create_time),
+			create_user_id = VALUES(create_user_id),
+			jion_type = VALUES(jion_type),
+			jion_password = VALUES(jion_password),
+			start_time = VALUES(start_time),
+			end_time = VALUES(end_time),
+			status = VALUES(status)
+	</insert>
+
+	<!--多条件修改-->
+	<update id="updateByParam" parameterType="com.meetchat.entity.query.MeetingMemberQuery">
+		 UPDATE meeting_member m
+ 		 <set> 
+			<if test="bean.meetingId != null">
+				 meeting_id = #{bean.meetingId},
+			</if>
+			<if test="bean.meetingNo != null">
+				 meeting_no = #{bean.meetingNo},
+			</if>
+			<if test="bean.meetingName != null">
+				 meeting_name = #{bean.meetingName},
+			</if>
+			<if test="bean.createTime != null">
+				 create_time = #{bean.createTime},
+			</if>
+			<if test="bean.createUserId != null">
+				 create_user_id = #{bean.createUserId},
+			</if>
+			<if test="bean.jionType != null">
+				 jion_type = #{bean.jionType},
+			</if>
+			<if test="bean.jionPassword != null">
+				 jion_password = #{bean.jionPassword},
+			</if>
+			<if test="bean.startTime != null">
+				 start_time = #{bean.startTime},
+			</if>
+			<if test="bean.endTime != null">
+				 end_time = #{bean.endTime},
+			</if>
+			<if test="bean.status != null">
+				 status = #{bean.status},
+			</if>
+ 		 </set>
+ 		 <include refid="query_condition" />
+	</update>
+
+	<!--多条件删除-->
+	<delete id="deleteByParam">
+		 delete m from meeting_member m
+ 		 <include refid="query_condition" />
+	</delete>
+
+	<!-- 根据MeetingId修改-->
+	<update id="updateByMeetingId" parameterType="com.meetchat.entity.po.MeetingMember">
+		 UPDATE meeting_member
+ 		 <set> 
+			<if test="bean.meetingNo != null">
+				 meeting_no = #{bean.meetingNo},
+			</if>
+			<if test="bean.meetingName != null">
+				 meeting_name = #{bean.meetingName},
+			</if>
+			<if test="bean.createTime != null">
+				 create_time = #{bean.createTime},
+			</if>
+			<if test="bean.createUserId != null">
+				 create_user_id = #{bean.createUserId},
+			</if>
+			<if test="bean.jionType != null">
+				 jion_type = #{bean.jionType},
+			</if>
+			<if test="bean.jionPassword != null">
+				 jion_password = #{bean.jionPassword},
+			</if>
+			<if test="bean.startTime != null">
+				 start_time = #{bean.startTime},
+			</if>
+			<if test="bean.endTime != null">
+				 end_time = #{bean.endTime},
+			</if>
+			<if test="bean.status != null">
+				 status = #{bean.status},
+			</if>
+ 		 </set>
+ 		 where meeting_id=#{meetingId}
+	</update>
+
+	<!-- 根据MeetingId删除-->
+	<delete id="deleteByMeetingId">
+		delete from meeting_member where meeting_id=#{meetingId}
+	</delete>
+
+	<!-- 根据PrimaryKey获取对象-->
+	<select id="selectByMeetingId" resultMap="base_result_map" >
+		select <include refid="base_column_list" /> from meeting_member m where meeting_id=#{meetingId}
+	</select>
+	<!-- 根据MeetingNo获取对象-->
+	<select id="selectByMeetingNo" resultMap="base_result_map" >
+		select <include refid="base_column_list" /> from meeting_member m where meeting_no=#{meetingNo}
+	</select>
+
+	<!-- 根据MeetingId列表批量查询 -->
+	<select id="selectByMeetingIds" resultMap="base_result_map">
+		select <include refid="base_column_list" /> from meeting_member m
+		where m.meeting_id in
+		<foreach collection="meetingIds" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+		and m.end_time is not null
+		order by m.end_time desc
+	</select>
+
+</mapper>

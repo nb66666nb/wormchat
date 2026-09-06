@@ -1,0 +1,932 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetchat.mappers.BotTemplateMapper">
+
+	<!--实体映射-->
+	<resultMap id="base_result_map" type="com.meetchat.entity.po.BotTemplate">
+		<!--模板ID: T+10位数字-->
+		<result column="template_id" property="templateId"  />
+		<!--模板名称-->
+		<result column="template_name" property="templateName"  />
+		<!--分类: FUNCTIONAL/COMPANION/HYBRID-->
+		<result column="template_category" property="templateCategory"  />
+		<!--默认头像-->
+		<result column="default_avatar_path" property="defaultAvatarPath"  />
+		<!--默认系统提示词-->
+		<result column="default_system_prompt" property="defaultSystemPrompt"  />
+		<!--默认欢迎语-->
+		<result column="default_welcome_msg" property="defaultWelcomeMsg"  />
+		<!--开放度-->
+		<result column="openness" property="openness"  />
+		<!--尽责度-->
+		<result column="conscientiousness" property="conscientiousness"  />
+		<!--外向度-->
+		<result column="extraversion" property="extraversion"  />
+		<!--亲和度-->
+		<result column="agreeableness" property="agreeableness"  />
+		<!--幽默度-->
+		<result column="humor" property="humor"  />
+		<!--共情能力-->
+		<result column="empathy_level" property="empathyLevel"  />
+		<!--情感敏感度-->
+		<result column="emotional_sensitivity" property="emotionalSensitivity"  />
+		<!--主动性-->
+		<result column="proactivity" property="proactivity"  />
+		<!--自我暴露度-->
+		<result column="vulnerability_sharing" property="vulnerabilitySharing"  />
+		<!--回复风格-->
+		<result column="response_style" property="responseStyle"  />
+		<!--emoji频率-->
+		<result column="emoji_frequency" property="emojiFrequency"  />
+		<!--定时问候-->
+		<result column="greeting_enabled" property="greetingEnabled"  />
+		<!--主动关心-->
+		<result column="proactive_care_enabled" property="proactiveCareEnabled"  />
+		<!--MCP工具列表-->
+		<result column="enabled_tools" property="enabledTools"  />
+		<!--官方模板-->
+		<result column="is_official" property="isOfficial"  />
+		<!--0禁用 1启用-->
+		<result column="status" property="status"  />
+		<!---->
+		<result column="sort_order" property="sortOrder"  />
+		<!---->
+		<result column="create_time" property="createTime"  />
+		<!---->
+		<result column="update_time" property="updateTime"  />
+	</resultMap>
+
+
+	<!-- 通用查询结果列-->
+	<sql id="base_column_list">
+		 b.template_id,b.template_name,b.template_category,b.default_avatar_path,b.default_system_prompt,
+		 b.default_welcome_msg,b.openness,b.conscientiousness,b.extraversion,b.agreeableness,
+		 b.humor,b.empathy_level,b.emotional_sensitivity,b.proactivity,b.vulnerability_sharing,
+		 b.response_style,b.emoji_frequency,b.greeting_enabled,b.proactive_care_enabled,b.enabled_tools,
+		 b.is_official,b.status,b.sort_order,b.create_time,b.update_time
+		 
+	</sql>
+
+	<sql id="base_condition_filed">
+			<if test="query.templateId != null and query.templateId!=''">
+				 and  b.template_id = #{query.templateId}
+			</if>
+			<if test="query.templateName != null and query.templateName!=''">
+				 and  b.template_name = #{query.templateName}
+			</if>
+			<if test="query.templateCategory != null and query.templateCategory!=''">
+				 and  b.template_category = #{query.templateCategory}
+			</if>
+			<if test="query.defaultAvatarPath != null and query.defaultAvatarPath!=''">
+				 and  b.default_avatar_path = #{query.defaultAvatarPath}
+			</if>
+			<if test="query.defaultSystemPrompt != null and query.defaultSystemPrompt!=''">
+				 and  b.default_system_prompt = #{query.defaultSystemPrompt}
+			</if>
+			<if test="query.defaultWelcomeMsg != null and query.defaultWelcomeMsg!=''">
+				 and  b.default_welcome_msg = #{query.defaultWelcomeMsg}
+			</if>
+			<if test="query.openness != null">
+				 and  b.openness = #{query.openness}
+			</if>
+			<if test="query.conscientiousness != null">
+				 and  b.conscientiousness = #{query.conscientiousness}
+			</if>
+			<if test="query.extraversion != null">
+				 and  b.extraversion = #{query.extraversion}
+			</if>
+			<if test="query.agreeableness != null">
+				 and  b.agreeableness = #{query.agreeableness}
+			</if>
+			<if test="query.humor != null">
+				 and  b.humor = #{query.humor}
+			</if>
+			<if test="query.empathyLevel != null">
+				 and  b.empathy_level = #{query.empathyLevel}
+			</if>
+			<if test="query.emotionalSensitivity != null">
+				 and  b.emotional_sensitivity = #{query.emotionalSensitivity}
+			</if>
+			<if test="query.proactivity != null">
+				 and  b.proactivity = #{query.proactivity}
+			</if>
+			<if test="query.vulnerabilitySharing != null">
+				 and  b.vulnerability_sharing = #{query.vulnerabilitySharing}
+			</if>
+			<if test="query.responseStyle != null and query.responseStyle!=''">
+				 and  b.response_style = #{query.responseStyle}
+			</if>
+			<if test="query.emojiFrequency != null and query.emojiFrequency!=''">
+				 and  b.emoji_frequency = #{query.emojiFrequency}
+			</if>
+			<if test="query.greetingEnabled != null">
+				 and  b.greeting_enabled = #{query.greetingEnabled}
+			</if>
+			<if test="query.proactiveCareEnabled != null">
+				 and  b.proactive_care_enabled = #{query.proactiveCareEnabled}
+			</if>
+			<if test="query.enabledTools != null and query.enabledTools!=''">
+				 and  b.enabled_tools = #{query.enabledTools}
+			</if>
+			<if test="query.isOfficial != null">
+				 and  b.is_official = #{query.isOfficial}
+			</if>
+			<if test="query.status != null">
+				 and  b.status = #{query.status}
+			</if>
+			<if test="query.sortOrder != null">
+				 and  b.sort_order = #{query.sortOrder}
+			</if>
+			<if test="query.createTime != null and query.createTime!=''">
+				 <![CDATA[ and  b.create_time=str_to_date(#{query.createTime}, '%Y-%m-%d') ]]>
+			</if>
+			<if test="query.updateTime != null and query.updateTime!=''">
+				 <![CDATA[ and  b.update_time=str_to_date(#{query.updateTime}, '%Y-%m-%d') ]]>
+			</if>
+	</sql>
+
+	<!-- 通用查询条件列-->
+	<sql id="query_condition">
+	 <where>
+			<include refid="base_condition_filed" />
+			<if test="query.templateIdFuzzy!= null  and query.templateIdFuzzy!=''">
+				 and  b.template_id like concat('%', #{query.templateIdFuzzy}, '%')
+			</if>
+			<if test="query.templateNameFuzzy!= null  and query.templateNameFuzzy!=''">
+				 and  b.template_name like concat('%', #{query.templateNameFuzzy}, '%')
+			</if>
+			<if test="query.templateCategoryFuzzy!= null  and query.templateCategoryFuzzy!=''">
+				 and  b.template_category like concat('%', #{query.templateCategoryFuzzy}, '%')
+			</if>
+			<if test="query.defaultAvatarPathFuzzy!= null  and query.defaultAvatarPathFuzzy!=''">
+				 and  b.default_avatar_path like concat('%', #{query.defaultAvatarPathFuzzy}, '%')
+			</if>
+			<if test="query.defaultSystemPromptFuzzy!= null  and query.defaultSystemPromptFuzzy!=''">
+				 and  b.default_system_prompt like concat('%', #{query.defaultSystemPromptFuzzy}, '%')
+			</if>
+			<if test="query.defaultWelcomeMsgFuzzy!= null  and query.defaultWelcomeMsgFuzzy!=''">
+				 and  b.default_welcome_msg like concat('%', #{query.defaultWelcomeMsgFuzzy}, '%')
+			</if>
+			<if test="query.responseStyleFuzzy!= null  and query.responseStyleFuzzy!=''">
+				 and  b.response_style like concat('%', #{query.responseStyleFuzzy}, '%')
+			</if>
+			<if test="query.emojiFrequencyFuzzy!= null  and query.emojiFrequencyFuzzy!=''">
+				 and  b.emoji_frequency like concat('%', #{query.emojiFrequencyFuzzy}, '%')
+			</if>
+			<if test="query.enabledToolsFuzzy!= null  and query.enabledToolsFuzzy!=''">
+				 and  b.enabled_tools like concat('%', #{query.enabledToolsFuzzy}, '%')
+			</if>
+			<if test="query.createTimeStart!= null and query.createTimeStart!=''">
+				 <![CDATA[ and  b.create_time>=str_to_date(#{query.createTimeStart}, '%Y-%m-%d') ]]>
+			</if>
+			<if test="query.createTimeEnd!= null and query.createTimeEnd!=''">
+				 <![CDATA[ and  b.create_time< date_sub(str_to_date(#{query.createTimeEnd},'%Y-%m-%d'),interval -1 day) ]]>
+			</if>
+			<if test="query.updateTimeStart!= null and query.updateTimeStart!=''">
+				 <![CDATA[ and  b.update_time>=str_to_date(#{query.updateTimeStart}, '%Y-%m-%d') ]]>
+			</if>
+			<if test="query.updateTimeEnd!= null and query.updateTimeEnd!=''">
+				 <![CDATA[ and  b.update_time< date_sub(str_to_date(#{query.updateTimeEnd},'%Y-%m-%d'),interval -1 day) ]]>
+			</if>
+	 </where>
+	</sql>
+
+	<!-- 查询集合-->
+	<select id="selectList" resultMap="base_result_map" >
+		 SELECT <include refid="base_column_list" /> FROM bot_template b <include refid="query_condition" />
+		 <if test="query.orderBy!=null">
+			 order by ${query.orderBy}
+		 </if>
+		 <if test="query.simplePage!=null">
+			 limit #{query.simplePage.start},#{query.simplePage.end}
+		 </if>
+	</select>
+
+	<!-- 查询数量-->
+	<select id="selectCount" resultType="java.lang.Integer" >
+		 SELECT count(1) FROM bot_template b <include refid="query_condition" />
+	</select>
+
+	<!-- 插入 （匹配有值的字段）-->
+	<insert id="insert" parameterType="com.meetchat.entity.po.BotTemplate">
+		 INSERT INTO bot_template
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="bean.templateId != null">
+				 template_id,
+			</if>
+			<if test="bean.templateName != null">
+				 template_name,
+			</if>
+			<if test="bean.templateCategory != null">
+				 template_category,
+			</if>
+			<if test="bean.defaultAvatarPath != null">
+				 default_avatar_path,
+			</if>
+			<if test="bean.defaultSystemPrompt != null">
+				 default_system_prompt,
+			</if>
+			<if test="bean.defaultWelcomeMsg != null">
+				 default_welcome_msg,
+			</if>
+			<if test="bean.openness != null">
+				 openness,
+			</if>
+			<if test="bean.conscientiousness != null">
+				 conscientiousness,
+			</if>
+			<if test="bean.extraversion != null">
+				 extraversion,
+			</if>
+			<if test="bean.agreeableness != null">
+				 agreeableness,
+			</if>
+			<if test="bean.humor != null">
+				 humor,
+			</if>
+			<if test="bean.empathyLevel != null">
+				 empathy_level,
+			</if>
+			<if test="bean.emotionalSensitivity != null">
+				 emotional_sensitivity,
+			</if>
+			<if test="bean.proactivity != null">
+				 proactivity,
+			</if>
+			<if test="bean.vulnerabilitySharing != null">
+				 vulnerability_sharing,
+			</if>
+			<if test="bean.responseStyle != null">
+				 response_style,
+			</if>
+			<if test="bean.emojiFrequency != null">
+				 emoji_frequency,
+			</if>
+			<if test="bean.greetingEnabled != null">
+				 greeting_enabled,
+			</if>
+			<if test="bean.proactiveCareEnabled != null">
+				 proactive_care_enabled,
+			</if>
+			<if test="bean.enabledTools != null">
+				 enabled_tools,
+			</if>
+			<if test="bean.isOfficial != null">
+				 is_official,
+			</if>
+			<if test="bean.status != null">
+				 status,
+			</if>
+			<if test="bean.sortOrder != null">
+				 sort_order,
+			</if>
+			<if test="bean.createTime != null">
+				 create_time,
+			</if>
+			<if test="bean.updateTime != null">
+				 update_time,
+			</if>
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="bean.templateId!=null">
+				 #{bean.templateId},
+			</if>
+			<if test="bean.templateName!=null">
+				 #{bean.templateName},
+			</if>
+			<if test="bean.templateCategory!=null">
+				 #{bean.templateCategory},
+			</if>
+			<if test="bean.defaultAvatarPath!=null">
+				 #{bean.defaultAvatarPath},
+			</if>
+			<if test="bean.defaultSystemPrompt!=null">
+				 #{bean.defaultSystemPrompt},
+			</if>
+			<if test="bean.defaultWelcomeMsg!=null">
+				 #{bean.defaultWelcomeMsg},
+			</if>
+			<if test="bean.openness!=null">
+				 #{bean.openness},
+			</if>
+			<if test="bean.conscientiousness!=null">
+				 #{bean.conscientiousness},
+			</if>
+			<if test="bean.extraversion!=null">
+				 #{bean.extraversion},
+			</if>
+			<if test="bean.agreeableness!=null">
+				 #{bean.agreeableness},
+			</if>
+			<if test="bean.humor!=null">
+				 #{bean.humor},
+			</if>
+			<if test="bean.empathyLevel!=null">
+				 #{bean.empathyLevel},
+			</if>
+			<if test="bean.emotionalSensitivity!=null">
+				 #{bean.emotionalSensitivity},
+			</if>
+			<if test="bean.proactivity!=null">
+				 #{bean.proactivity},
+			</if>
+			<if test="bean.vulnerabilitySharing!=null">
+				 #{bean.vulnerabilitySharing},
+			</if>
+			<if test="bean.responseStyle!=null">
+				 #{bean.responseStyle},
+			</if>
+			<if test="bean.emojiFrequency!=null">
+				 #{bean.emojiFrequency},
+			</if>
+			<if test="bean.greetingEnabled!=null">
+				 #{bean.greetingEnabled},
+			</if>
+			<if test="bean.proactiveCareEnabled!=null">
+				 #{bean.proactiveCareEnabled},
+			</if>
+			<if test="bean.enabledTools!=null">
+				 #{bean.enabledTools},
+			</if>
+			<if test="bean.isOfficial!=null">
+				 #{bean.isOfficial},
+			</if>
+			<if test="bean.status!=null">
+				 #{bean.status},
+			</if>
+			<if test="bean.sortOrder!=null">
+				 #{bean.sortOrder},
+			</if>
+			<if test="bean.createTime!=null">
+				 #{bean.createTime},
+			</if>
+			<if test="bean.updateTime!=null">
+				 #{bean.updateTime},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段）-->
+	<insert id="insertOrUpdate" parameterType="com.meetchat.entity.po.BotTemplate">
+		 INSERT INTO bot_template
+		 <trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.templateId != null">
+				 template_id,
+			</if>
+			<if test="bean.templateName != null">
+				 template_name,
+			</if>
+			<if test="bean.templateCategory != null">
+				 template_category,
+			</if>
+			<if test="bean.defaultAvatarPath != null">
+				 default_avatar_path,
+			</if>
+			<if test="bean.defaultSystemPrompt != null">
+				 default_system_prompt,
+			</if>
+			<if test="bean.defaultWelcomeMsg != null">
+				 default_welcome_msg,
+			</if>
+			<if test="bean.openness != null">
+				 openness,
+			</if>
+			<if test="bean.conscientiousness != null">
+				 conscientiousness,
+			</if>
+			<if test="bean.extraversion != null">
+				 extraversion,
+			</if>
+			<if test="bean.agreeableness != null">
+				 agreeableness,
+			</if>
+			<if test="bean.humor != null">
+				 humor,
+			</if>
+			<if test="bean.empathyLevel != null">
+				 empathy_level,
+			</if>
+			<if test="bean.emotionalSensitivity != null">
+				 emotional_sensitivity,
+			</if>
+			<if test="bean.proactivity != null">
+				 proactivity,
+			</if>
+			<if test="bean.vulnerabilitySharing != null">
+				 vulnerability_sharing,
+			</if>
+			<if test="bean.responseStyle != null">
+				 response_style,
+			</if>
+			<if test="bean.emojiFrequency != null">
+				 emoji_frequency,
+			</if>
+			<if test="bean.greetingEnabled != null">
+				 greeting_enabled,
+			</if>
+			<if test="bean.proactiveCareEnabled != null">
+				 proactive_care_enabled,
+			</if>
+			<if test="bean.enabledTools != null">
+				 enabled_tools,
+			</if>
+			<if test="bean.isOfficial != null">
+				 is_official,
+			</if>
+			<if test="bean.status != null">
+				 status,
+			</if>
+			<if test="bean.sortOrder != null">
+				 sort_order,
+			</if>
+			<if test="bean.createTime != null">
+				 create_time,
+			</if>
+			<if test="bean.updateTime != null">
+				 update_time,
+			</if>
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.templateId!=null">
+				 #{bean.templateId},
+			</if>
+			<if test="bean.templateName!=null">
+				 #{bean.templateName},
+			</if>
+			<if test="bean.templateCategory!=null">
+				 #{bean.templateCategory},
+			</if>
+			<if test="bean.defaultAvatarPath!=null">
+				 #{bean.defaultAvatarPath},
+			</if>
+			<if test="bean.defaultSystemPrompt!=null">
+				 #{bean.defaultSystemPrompt},
+			</if>
+			<if test="bean.defaultWelcomeMsg!=null">
+				 #{bean.defaultWelcomeMsg},
+			</if>
+			<if test="bean.openness!=null">
+				 #{bean.openness},
+			</if>
+			<if test="bean.conscientiousness!=null">
+				 #{bean.conscientiousness},
+			</if>
+			<if test="bean.extraversion!=null">
+				 #{bean.extraversion},
+			</if>
+			<if test="bean.agreeableness!=null">
+				 #{bean.agreeableness},
+			</if>
+			<if test="bean.humor!=null">
+				 #{bean.humor},
+			</if>
+			<if test="bean.empathyLevel!=null">
+				 #{bean.empathyLevel},
+			</if>
+			<if test="bean.emotionalSensitivity!=null">
+				 #{bean.emotionalSensitivity},
+			</if>
+			<if test="bean.proactivity!=null">
+				 #{bean.proactivity},
+			</if>
+			<if test="bean.vulnerabilitySharing!=null">
+				 #{bean.vulnerabilitySharing},
+			</if>
+			<if test="bean.responseStyle!=null">
+				 #{bean.responseStyle},
+			</if>
+			<if test="bean.emojiFrequency!=null">
+				 #{bean.emojiFrequency},
+			</if>
+			<if test="bean.greetingEnabled!=null">
+				 #{bean.greetingEnabled},
+			</if>
+			<if test="bean.proactiveCareEnabled!=null">
+				 #{bean.proactiveCareEnabled},
+			</if>
+			<if test="bean.enabledTools!=null">
+				 #{bean.enabledTools},
+			</if>
+			<if test="bean.isOfficial!=null">
+				 #{bean.isOfficial},
+			</if>
+			<if test="bean.status!=null">
+				 #{bean.status},
+			</if>
+			<if test="bean.sortOrder!=null">
+				 #{bean.sortOrder},
+			</if>
+			<if test="bean.createTime!=null">
+				 #{bean.createTime},
+			</if>
+			<if test="bean.updateTime!=null">
+				 #{bean.updateTime},
+			</if>
+		 </trim>
+		 on DUPLICATE key update 
+		 <trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.templateId!=null">
+				 template_id = VALUES(template_id),
+			</if>
+			<if test="bean.templateName!=null">
+				 template_name = VALUES(template_name),
+			</if>
+			<if test="bean.templateCategory!=null">
+				 template_category = VALUES(template_category),
+			</if>
+			<if test="bean.defaultAvatarPath!=null">
+				 default_avatar_path = VALUES(default_avatar_path),
+			</if>
+			<if test="bean.defaultSystemPrompt!=null">
+				 default_system_prompt = VALUES(default_system_prompt),
+			</if>
+			<if test="bean.defaultWelcomeMsg!=null">
+				 default_welcome_msg = VALUES(default_welcome_msg),
+			</if>
+			<if test="bean.openness!=null">
+				 openness = VALUES(openness),
+			</if>
+			<if test="bean.conscientiousness!=null">
+				 conscientiousness = VALUES(conscientiousness),
+			</if>
+			<if test="bean.extraversion!=null">
+				 extraversion = VALUES(extraversion),
+			</if>
+			<if test="bean.agreeableness!=null">
+				 agreeableness = VALUES(agreeableness),
+			</if>
+			<if test="bean.humor!=null">
+				 humor = VALUES(humor),
+			</if>
+			<if test="bean.empathyLevel!=null">
+				 empathy_level = VALUES(empathy_level),
+			</if>
+			<if test="bean.emotionalSensitivity!=null">
+				 emotional_sensitivity = VALUES(emotional_sensitivity),
+			</if>
+			<if test="bean.proactivity!=null">
+				 proactivity = VALUES(proactivity),
+			</if>
+			<if test="bean.vulnerabilitySharing!=null">
+				 vulnerability_sharing = VALUES(vulnerability_sharing),
+			</if>
+			<if test="bean.responseStyle!=null">
+				 response_style = VALUES(response_style),
+			</if>
+			<if test="bean.emojiFrequency!=null">
+				 emoji_frequency = VALUES(emoji_frequency),
+			</if>
+			<if test="bean.greetingEnabled!=null">
+				 greeting_enabled = VALUES(greeting_enabled),
+			</if>
+			<if test="bean.proactiveCareEnabled!=null">
+				 proactive_care_enabled = VALUES(proactive_care_enabled),
+			</if>
+			<if test="bean.enabledTools!=null">
+				 enabled_tools = VALUES(enabled_tools),
+			</if>
+			<if test="bean.isOfficial!=null">
+				 is_official = VALUES(is_official),
+			</if>
+			<if test="bean.status!=null">
+				 status = VALUES(status),
+			</if>
+			<if test="bean.sortOrder!=null">
+				 sort_order = VALUES(sort_order),
+			</if>
+			<if test="bean.createTime!=null">
+				 create_time = VALUES(create_time),
+			</if>
+			<if test="bean.updateTime!=null">
+				 update_time = VALUES(update_time),
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 添加 （批量插入）-->
+	<insert id="insertBatch" parameterType="com.meetchat.entity.po.BotTemplate">
+		 INSERT INTO bot_template(
+			 template_id,
+			 template_name,
+			 template_category,
+			 default_avatar_path,
+			 default_system_prompt,
+			 default_welcome_msg,
+			 openness,
+			 conscientiousness,
+			 extraversion,
+			 agreeableness,
+			 humor,
+			 empathy_level,
+			 emotional_sensitivity,
+			 proactivity,
+			 vulnerability_sharing,
+			 response_style,
+			 emoji_frequency,
+			 greeting_enabled,
+			 proactive_care_enabled,
+			 enabled_tools,
+			 is_official,
+			 status,
+			 sort_order,
+			 create_time,
+			 update_time
+		 )values
+		 <foreach collection="list" item="item" separator=",">
+			 (
+				 #{item.templateId},
+				 #{item.templateName},
+				 #{item.templateCategory},
+				 #{item.defaultAvatarPath},
+				 #{item.defaultSystemPrompt},
+				 #{item.defaultWelcomeMsg},
+				 #{item.openness},
+				 #{item.conscientiousness},
+				 #{item.extraversion},
+				 #{item.agreeableness},
+				 #{item.humor},
+				 #{item.empathyLevel},
+				 #{item.emotionalSensitivity},
+				 #{item.proactivity},
+				 #{item.vulnerabilitySharing},
+				 #{item.responseStyle},
+				 #{item.emojiFrequency},
+				 #{item.greetingEnabled},
+				 #{item.proactiveCareEnabled},
+				 #{item.enabledTools},
+				 #{item.isOfficial},
+				 #{item.status},
+				 #{item.sortOrder},
+				 #{item.createTime},
+				 #{item.updateTime}
+			 )
+		 </foreach>
+	</insert>
+
+	<!-- 批量新增修改 （批量插入）-->
+	<insert id="insertOrUpdateBatch" parameterType="com.meetchat.entity.po.BotTemplate">
+		 INSERT INTO bot_template(
+			 template_id,
+			 template_name,
+			 template_category,
+			 default_avatar_path,
+			 default_system_prompt,
+			 default_welcome_msg,
+			 openness,
+			 conscientiousness,
+			 extraversion,
+			 agreeableness,
+			 humor,
+			 empathy_level,
+			 emotional_sensitivity,
+			 proactivity,
+			 vulnerability_sharing,
+			 response_style,
+			 emoji_frequency,
+			 greeting_enabled,
+			 proactive_care_enabled,
+			 enabled_tools,
+			 is_official,
+			 status,
+			 sort_order,
+			 create_time,
+			 update_time
+		 )values
+		 <foreach collection="list" item="item" separator=",">
+			 (
+				 #{item.templateId},
+				 #{item.templateName},
+				 #{item.templateCategory},
+				 #{item.defaultAvatarPath},
+				 #{item.defaultSystemPrompt},
+				 #{item.defaultWelcomeMsg},
+				 #{item.openness},
+				 #{item.conscientiousness},
+				 #{item.extraversion},
+				 #{item.agreeableness},
+				 #{item.humor},
+				 #{item.empathyLevel},
+				 #{item.emotionalSensitivity},
+				 #{item.proactivity},
+				 #{item.vulnerabilitySharing},
+				 #{item.responseStyle},
+				 #{item.emojiFrequency},
+				 #{item.greetingEnabled},
+				 #{item.proactiveCareEnabled},
+				 #{item.enabledTools},
+				 #{item.isOfficial},
+				 #{item.status},
+				 #{item.sortOrder},
+				 #{item.createTime},
+				 #{item.updateTime}
+			 )
+		 </foreach>
+			on DUPLICATE key update 
+			template_id = VALUES(template_id),
+			template_name = VALUES(template_name),
+			template_category = VALUES(template_category),
+			default_avatar_path = VALUES(default_avatar_path),
+			default_system_prompt = VALUES(default_system_prompt),
+			default_welcome_msg = VALUES(default_welcome_msg),
+			openness = VALUES(openness),
+			conscientiousness = VALUES(conscientiousness),
+			extraversion = VALUES(extraversion),
+			agreeableness = VALUES(agreeableness),
+			humor = VALUES(humor),
+			empathy_level = VALUES(empathy_level),
+			emotional_sensitivity = VALUES(emotional_sensitivity),
+			proactivity = VALUES(proactivity),
+			vulnerability_sharing = VALUES(vulnerability_sharing),
+			response_style = VALUES(response_style),
+			emoji_frequency = VALUES(emoji_frequency),
+			greeting_enabled = VALUES(greeting_enabled),
+			proactive_care_enabled = VALUES(proactive_care_enabled),
+			enabled_tools = VALUES(enabled_tools),
+			is_official = VALUES(is_official),
+			status = VALUES(status),
+			sort_order = VALUES(sort_order),
+			create_time = VALUES(create_time),
+			update_time = VALUES(update_time)
+	</insert>
+
+	<!--多条件修改-->
+	<update id="updateByParam" parameterType="com.meetchat.entity.query.BotTemplateQuery">
+		 UPDATE bot_template b
+ 		 <set> 
+			<if test="bean.templateId != null">
+				 template_id = #{bean.templateId},
+			</if>
+			<if test="bean.templateName != null">
+				 template_name = #{bean.templateName},
+			</if>
+			<if test="bean.templateCategory != null">
+				 template_category = #{bean.templateCategory},
+			</if>
+			<if test="bean.defaultAvatarPath != null">
+				 default_avatar_path = #{bean.defaultAvatarPath},
+			</if>
+			<if test="bean.defaultSystemPrompt != null">
+				 default_system_prompt = #{bean.defaultSystemPrompt},
+			</if>
+			<if test="bean.defaultWelcomeMsg != null">
+				 default_welcome_msg = #{bean.defaultWelcomeMsg},
+			</if>
+			<if test="bean.openness != null">
+				 openness = #{bean.openness},
+			</if>
+			<if test="bean.conscientiousness != null">
+				 conscientiousness = #{bean.conscientiousness},
+			</if>
+			<if test="bean.extraversion != null">
+				 extraversion = #{bean.extraversion},
+			</if>
+			<if test="bean.agreeableness != null">
+				 agreeableness = #{bean.agreeableness},
+			</if>
+			<if test="bean.humor != null">
+				 humor = #{bean.humor},
+			</if>
+			<if test="bean.empathyLevel != null">
+				 empathy_level = #{bean.empathyLevel},
+			</if>
+			<if test="bean.emotionalSensitivity != null">
+				 emotional_sensitivity = #{bean.emotionalSensitivity},
+			</if>
+			<if test="bean.proactivity != null">
+				 proactivity = #{bean.proactivity},
+			</if>
+			<if test="bean.vulnerabilitySharing != null">
+				 vulnerability_sharing = #{bean.vulnerabilitySharing},
+			</if>
+			<if test="bean.responseStyle != null">
+				 response_style = #{bean.responseStyle},
+			</if>
+			<if test="bean.emojiFrequency != null">
+				 emoji_frequency = #{bean.emojiFrequency},
+			</if>
+			<if test="bean.greetingEnabled != null">
+				 greeting_enabled = #{bean.greetingEnabled},
+			</if>
+			<if test="bean.proactiveCareEnabled != null">
+				 proactive_care_enabled = #{bean.proactiveCareEnabled},
+			</if>
+			<if test="bean.enabledTools != null">
+				 enabled_tools = #{bean.enabledTools},
+			</if>
+			<if test="bean.isOfficial != null">
+				 is_official = #{bean.isOfficial},
+			</if>
+			<if test="bean.status != null">
+				 status = #{bean.status},
+			</if>
+			<if test="bean.sortOrder != null">
+				 sort_order = #{bean.sortOrder},
+			</if>
+			<if test="bean.createTime != null">
+				 create_time = #{bean.createTime},
+			</if>
+			<if test="bean.updateTime != null">
+				 update_time = #{bean.updateTime},
+			</if>
+ 		 </set>
+ 		 <include refid="query_condition" />
+	</update>
+
+	<!--多条件删除-->
+	<delete id="deleteByParam">
+		 delete b from bot_template b
+ 		 <include refid="query_condition" />
+	</delete>
+
+	<!-- 根据TemplateId修改-->
+	<update id="updateByTemplateId" parameterType="com.meetchat.entity.po.BotTemplate">
+		 UPDATE bot_template
+ 		 <set> 
+			<if test="bean.templateName != null">
+				 template_name = #{bean.templateName},
+			</if>
+			<if test="bean.templateCategory != null">
+				 template_category = #{bean.templateCategory},
+			</if>
+			<if test="bean.defaultAvatarPath != null">
+				 default_avatar_path = #{bean.defaultAvatarPath},
+			</if>
+			<if test="bean.defaultSystemPrompt != null">
+				 default_system_prompt = #{bean.defaultSystemPrompt},
+			</if>
+			<if test="bean.defaultWelcomeMsg != null">
+				 default_welcome_msg = #{bean.defaultWelcomeMsg},
+			</if>
+			<if test="bean.openness != null">
+				 openness = #{bean.openness},
+			</if>
+			<if test="bean.conscientiousness != null">
+				 conscientiousness = #{bean.conscientiousness},
+			</if>
+			<if test="bean.extraversion != null">
+				 extraversion = #{bean.extraversion},
+			</if>
+			<if test="bean.agreeableness != null">
+				 agreeableness = #{bean.agreeableness},
+			</if>
+			<if test="bean.humor != null">
+				 humor = #{bean.humor},
+			</if>
+			<if test="bean.empathyLevel != null">
+				 empathy_level = #{bean.empathyLevel},
+			</if>
+			<if test="bean.emotionalSensitivity != null">
+				 emotional_sensitivity = #{bean.emotionalSensitivity},
+			</if>
+			<if test="bean.proactivity != null">
+				 proactivity = #{bean.proactivity},
+			</if>
+			<if test="bean.vulnerabilitySharing != null">
+				 vulnerability_sharing = #{bean.vulnerabilitySharing},
+			</if>
+			<if test="bean.responseStyle != null">
+				 response_style = #{bean.responseStyle},
+			</if>
+			<if test="bean.emojiFrequency != null">
+				 emoji_frequency = #{bean.emojiFrequency},
+			</if>
+			<if test="bean.greetingEnabled != null">
+				 greeting_enabled = #{bean.greetingEnabled},
+			</if>
+			<if test="bean.proactiveCareEnabled != null">
+				 proactive_care_enabled = #{bean.proactiveCareEnabled},
+			</if>
+			<if test="bean.enabledTools != null">
+				 enabled_tools = #{bean.enabledTools},
+			</if>
+			<if test="bean.isOfficial != null">
+				 is_official = #{bean.isOfficial},
+			</if>
+			<if test="bean.status != null">
+				 status = #{bean.status},
+			</if>
+			<if test="bean.sortOrder != null">
+				 sort_order = #{bean.sortOrder},
+			</if>
+			<if test="bean.createTime != null">
+				 create_time = #{bean.createTime},
+			</if>
+			<if test="bean.updateTime != null">
+				 update_time = #{bean.updateTime},
+			</if>
+ 		 </set>
+ 		 where template_id=#{templateId}
+	</update>
+
+	<!-- 根据TemplateId删除-->
+	<delete id="deleteByTemplateId">
+		delete from bot_template where template_id=#{templateId}
+	</delete>
+
+	<!-- 根据PrimaryKey获取对象-->
+	<select id="selectByTemplateId" resultMap="base_result_map" >
+		select <include refid="base_column_list" /> from bot_template b where template_id=#{templateId}
+	</select>
+
+</mapper>

@@ -1,0 +1,531 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetchat.mappers.BotEmotionLogMapper">
+
+	<!--实体映射-->
+	<resultMap id="base_result_map" type="com.meetchat.entity.po.BotEmotionLog">
+		<!---->
+		<id column="id" property="id"  />
+		<!---->
+		<result column="user_id" property="userId"  />
+		<!---->
+		<result column="bot_id" property="botId"  />
+		<!---->
+		<result column="session_id" property="sessionId"  />
+		<!--情绪类型-->
+		<result column="emotion_type" property="emotionType"  />
+		<!--强度-->
+		<result column="emotion_intensity" property="emotionIntensity"  />
+		<!--触发原因-->
+		<result column="emotion_trigger" property="emotionTrigger"  />
+		<!---->
+		<result column="source_message_id" property="sourceMessageId"  />
+		<!---->
+		<result column="analysis_method" property="analysisMethod"  />
+		<!---->
+		<result column="confidence" property="confidence"  />
+		<!---->
+		<result column="time_of_day" property="timeOfDay"  />
+		<!---->
+		<result column="is_weekend" property="isWeekend"  />
+		<!---->
+		<result column="create_time" property="createTime"  />
+	</resultMap>
+
+
+	<!-- 通用查询结果列-->
+	<sql id="base_column_list">
+		 b.id,b.user_id,b.bot_id,b.session_id,b.emotion_type,
+		 b.emotion_intensity,b.emotion_trigger,b.source_message_id,b.analysis_method,b.confidence,
+		 b.time_of_day,b.is_weekend,b.create_time
+	</sql>
+
+	<sql id="base_condition_filed">
+			<if test="query.id != null">
+				 and  b.id = #{query.id}
+			</if>
+			<if test="query.userId != null and query.userId!=''">
+				 and  b.user_id = #{query.userId}
+			</if>
+			<if test="query.botId != null and query.botId!=''">
+				 and  b.bot_id = #{query.botId}
+			</if>
+			<if test="query.sessionId != null and query.sessionId!=''">
+				 and  b.session_id = #{query.sessionId}
+			</if>
+			<if test="query.emotionType != null and query.emotionType!=''">
+				 and  b.emotion_type = #{query.emotionType}
+			</if>
+			<if test="query.emotionIntensity != null">
+				 and  b.emotion_intensity = #{query.emotionIntensity}
+			</if>
+			<if test="query.emotionTrigger != null and query.emotionTrigger!=''">
+				 and  b.emotion_trigger = #{query.emotionTrigger}
+			</if>
+			<if test="query.sourceMessageId != null">
+				 and  b.source_message_id = #{query.sourceMessageId}
+			</if>
+			<if test="query.analysisMethod != null and query.analysisMethod!=''">
+				 and  b.analysis_method = #{query.analysisMethod}
+			</if>
+			<if test="query.confidence != null">
+				 and  b.confidence = #{query.confidence}
+			</if>
+			<if test="query.timeOfDay != null and query.timeOfDay!=''">
+				 and  b.time_of_day = #{query.timeOfDay}
+			</if>
+			<if test="query.isWeekend != null">
+				 and  b.is_weekend = #{query.isWeekend}
+			</if>
+			<if test="query.createTime != null and query.createTime!=''">
+				 <![CDATA[ and  b.create_time=str_to_date(#{query.createTime}, '%Y-%m-%d') ]]>
+			</if>
+	</sql>
+
+	<!-- 通用查询条件列-->
+	<sql id="query_condition">
+	 <where>
+			<include refid="base_condition_filed" />
+			<if test="query.userIdFuzzy!= null  and query.userIdFuzzy!=''">
+				 and  b.user_id like concat('%', #{query.userIdFuzzy}, '%')
+			</if>
+			<if test="query.botIdFuzzy!= null  and query.botIdFuzzy!=''">
+				 and  b.bot_id like concat('%', #{query.botIdFuzzy}, '%')
+			</if>
+			<if test="query.sessionIdFuzzy!= null  and query.sessionIdFuzzy!=''">
+				 and  b.session_id like concat('%', #{query.sessionIdFuzzy}, '%')
+			</if>
+			<if test="query.emotionTypeFuzzy!= null  and query.emotionTypeFuzzy!=''">
+				 and  b.emotion_type like concat('%', #{query.emotionTypeFuzzy}, '%')
+			</if>
+			<if test="query.emotionTriggerFuzzy!= null  and query.emotionTriggerFuzzy!=''">
+				 and  b.emotion_trigger like concat('%', #{query.emotionTriggerFuzzy}, '%')
+			</if>
+			<if test="query.analysisMethodFuzzy!= null  and query.analysisMethodFuzzy!=''">
+				 and  b.analysis_method like concat('%', #{query.analysisMethodFuzzy}, '%')
+			</if>
+			<if test="query.timeOfDayFuzzy!= null  and query.timeOfDayFuzzy!=''">
+				 and  b.time_of_day like concat('%', #{query.timeOfDayFuzzy}, '%')
+			</if>
+			<if test="query.createTimeStart!= null and query.createTimeStart!=''">
+				 <![CDATA[ and  b.create_time>=str_to_date(#{query.createTimeStart}, '%Y-%m-%d') ]]>
+			</if>
+			<if test="query.createTimeEnd!= null and query.createTimeEnd!=''">
+				 <![CDATA[ and  b.create_time< date_sub(str_to_date(#{query.createTimeEnd},'%Y-%m-%d'),interval -1 day) ]]>
+			</if>
+	 </where>
+	</sql>
+
+	<!-- 查询集合-->
+	<select id="selectList" resultMap="base_result_map" >
+		 SELECT <include refid="base_column_list" /> FROM bot_emotion_log b <include refid="query_condition" />
+		 <if test="query.orderBy!=null">
+			 order by ${query.orderBy}
+		 </if>
+		 <if test="query.simplePage!=null">
+			 limit #{query.simplePage.start},#{query.simplePage.end}
+		 </if>
+	</select>
+
+	<!-- 查询数量-->
+	<select id="selectCount" resultType="java.lang.Integer" >
+		 SELECT count(1) FROM bot_emotion_log b <include refid="query_condition" />
+	</select>
+
+	<!-- 插入 （匹配有值的字段）-->
+	<insert id="insert" parameterType="com.meetchat.entity.po.BotEmotionLog">
+		<selectKey keyProperty="bean.id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		 INSERT INTO bot_emotion_log
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="bean.userId != null">
+				 user_id,
+			</if>
+			<if test="bean.botId != null">
+				 bot_id,
+			</if>
+			<if test="bean.sessionId != null">
+				 session_id,
+			</if>
+			<if test="bean.emotionType != null">
+				 emotion_type,
+			</if>
+			<if test="bean.emotionIntensity != null">
+				 emotion_intensity,
+			</if>
+			<if test="bean.emotionTrigger != null">
+				 emotion_trigger,
+			</if>
+			<if test="bean.sourceMessageId != null">
+				 source_message_id,
+			</if>
+			<if test="bean.analysisMethod != null">
+				 analysis_method,
+			</if>
+			<if test="bean.confidence != null">
+				 confidence,
+			</if>
+			<if test="bean.timeOfDay != null">
+				 time_of_day,
+			</if>
+			<if test="bean.isWeekend != null">
+				 is_weekend,
+			</if>
+			<if test="bean.createTime != null">
+				 create_time,
+			</if>
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="bean.userId!=null">
+				 #{bean.userId},
+			</if>
+			<if test="bean.botId!=null">
+				 #{bean.botId},
+			</if>
+			<if test="bean.sessionId!=null">
+				 #{bean.sessionId},
+			</if>
+			<if test="bean.emotionType!=null">
+				 #{bean.emotionType},
+			</if>
+			<if test="bean.emotionIntensity!=null">
+				 #{bean.emotionIntensity},
+			</if>
+			<if test="bean.emotionTrigger!=null">
+				 #{bean.emotionTrigger},
+			</if>
+			<if test="bean.sourceMessageId!=null">
+				 #{bean.sourceMessageId},
+			</if>
+			<if test="bean.analysisMethod!=null">
+				 #{bean.analysisMethod},
+			</if>
+			<if test="bean.confidence!=null">
+				 #{bean.confidence},
+			</if>
+			<if test="bean.timeOfDay!=null">
+				 #{bean.timeOfDay},
+			</if>
+			<if test="bean.isWeekend!=null">
+				 #{bean.isWeekend},
+			</if>
+			<if test="bean.createTime!=null">
+				 #{bean.createTime},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段）-->
+	<insert id="insertOrUpdate" parameterType="com.meetchat.entity.po.BotEmotionLog">
+		 INSERT INTO bot_emotion_log
+		 <trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				 id,
+			</if>
+			<if test="bean.userId != null">
+				 user_id,
+			</if>
+			<if test="bean.botId != null">
+				 bot_id,
+			</if>
+			<if test="bean.sessionId != null">
+				 session_id,
+			</if>
+			<if test="bean.emotionType != null">
+				 emotion_type,
+			</if>
+			<if test="bean.emotionIntensity != null">
+				 emotion_intensity,
+			</if>
+			<if test="bean.emotionTrigger != null">
+				 emotion_trigger,
+			</if>
+			<if test="bean.sourceMessageId != null">
+				 source_message_id,
+			</if>
+			<if test="bean.analysisMethod != null">
+				 analysis_method,
+			</if>
+			<if test="bean.confidence != null">
+				 confidence,
+			</if>
+			<if test="bean.timeOfDay != null">
+				 time_of_day,
+			</if>
+			<if test="bean.isWeekend != null">
+				 is_weekend,
+			</if>
+			<if test="bean.createTime != null">
+				 create_time,
+			</if>
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bean.id!=null">
+				 #{bean.id},
+			</if>
+			<if test="bean.userId!=null">
+				 #{bean.userId},
+			</if>
+			<if test="bean.botId!=null">
+				 #{bean.botId},
+			</if>
+			<if test="bean.sessionId!=null">
+				 #{bean.sessionId},
+			</if>
+			<if test="bean.emotionType!=null">
+				 #{bean.emotionType},
+			</if>
+			<if test="bean.emotionIntensity!=null">
+				 #{bean.emotionIntensity},
+			</if>
+			<if test="bean.emotionTrigger!=null">
+				 #{bean.emotionTrigger},
+			</if>
+			<if test="bean.sourceMessageId!=null">
+				 #{bean.sourceMessageId},
+			</if>
+			<if test="bean.analysisMethod!=null">
+				 #{bean.analysisMethod},
+			</if>
+			<if test="bean.confidence!=null">
+				 #{bean.confidence},
+			</if>
+			<if test="bean.timeOfDay!=null">
+				 #{bean.timeOfDay},
+			</if>
+			<if test="bean.isWeekend!=null">
+				 #{bean.isWeekend},
+			</if>
+			<if test="bean.createTime!=null">
+				 #{bean.createTime},
+			</if>
+		 </trim>
+		 on DUPLICATE key update 
+		 <trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.userId!=null">
+				 user_id = VALUES(user_id),
+			</if>
+			<if test="bean.botId!=null">
+				 bot_id = VALUES(bot_id),
+			</if>
+			<if test="bean.sessionId!=null">
+				 session_id = VALUES(session_id),
+			</if>
+			<if test="bean.emotionType!=null">
+				 emotion_type = VALUES(emotion_type),
+			</if>
+			<if test="bean.emotionIntensity!=null">
+				 emotion_intensity = VALUES(emotion_intensity),
+			</if>
+			<if test="bean.emotionTrigger!=null">
+				 emotion_trigger = VALUES(emotion_trigger),
+			</if>
+			<if test="bean.sourceMessageId!=null">
+				 source_message_id = VALUES(source_message_id),
+			</if>
+			<if test="bean.analysisMethod!=null">
+				 analysis_method = VALUES(analysis_method),
+			</if>
+			<if test="bean.confidence!=null">
+				 confidence = VALUES(confidence),
+			</if>
+			<if test="bean.timeOfDay!=null">
+				 time_of_day = VALUES(time_of_day),
+			</if>
+			<if test="bean.isWeekend!=null">
+				 is_weekend = VALUES(is_weekend),
+			</if>
+			<if test="bean.createTime!=null">
+				 create_time = VALUES(create_time),
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 添加 （批量插入）-->
+	<insert id="insertBatch" parameterType="com.meetchat.entity.po.BotEmotionLog" useGeneratedKeys="true" keyProperty="id">
+		 INSERT INTO bot_emotion_log(
+			 user_id,
+			 bot_id,
+			 session_id,
+			 emotion_type,
+			 emotion_intensity,
+			 emotion_trigger,
+			 source_message_id,
+			 analysis_method,
+			 confidence,
+			 time_of_day,
+			 is_weekend,
+			 create_time
+		 )values
+		 <foreach collection="list" item="item" separator=",">
+			 (
+				 #{item.userId},
+				 #{item.botId},
+				 #{item.sessionId},
+				 #{item.emotionType},
+				 #{item.emotionIntensity},
+				 #{item.emotionTrigger},
+				 #{item.sourceMessageId},
+				 #{item.analysisMethod},
+				 #{item.confidence},
+				 #{item.timeOfDay},
+				 #{item.isWeekend},
+				 #{item.createTime}
+			 )
+		 </foreach>
+	</insert>
+
+	<!-- 批量新增修改 （批量插入）-->
+	<insert id="insertOrUpdateBatch" parameterType="com.meetchat.entity.po.BotEmotionLog">
+		 INSERT INTO bot_emotion_log(
+			 user_id,
+			 bot_id,
+			 session_id,
+			 emotion_type,
+			 emotion_intensity,
+			 emotion_trigger,
+			 source_message_id,
+			 analysis_method,
+			 confidence,
+			 time_of_day,
+			 is_weekend,
+			 create_time
+		 )values
+		 <foreach collection="list" item="item" separator=",">
+			 (
+				 #{item.userId},
+				 #{item.botId},
+				 #{item.sessionId},
+				 #{item.emotionType},
+				 #{item.emotionIntensity},
+				 #{item.emotionTrigger},
+				 #{item.sourceMessageId},
+				 #{item.analysisMethod},
+				 #{item.confidence},
+				 #{item.timeOfDay},
+				 #{item.isWeekend},
+				 #{item.createTime}
+			 )
+		 </foreach>
+			on DUPLICATE key update 
+			user_id = VALUES(user_id),
+			bot_id = VALUES(bot_id),
+			session_id = VALUES(session_id),
+			emotion_type = VALUES(emotion_type),
+			emotion_intensity = VALUES(emotion_intensity),
+			emotion_trigger = VALUES(emotion_trigger),
+			source_message_id = VALUES(source_message_id),
+			analysis_method = VALUES(analysis_method),
+			confidence = VALUES(confidence),
+			time_of_day = VALUES(time_of_day),
+			is_weekend = VALUES(is_weekend),
+			create_time = VALUES(create_time)
+	</insert>
+
+	<!--多条件修改-->
+	<update id="updateByParam" parameterType="com.meetchat.entity.query.BotEmotionLogQuery">
+		 UPDATE bot_emotion_log b
+ 		 <set> 
+			<if test="bean.userId != null">
+				 user_id = #{bean.userId},
+			</if>
+			<if test="bean.botId != null">
+				 bot_id = #{bean.botId},
+			</if>
+			<if test="bean.sessionId != null">
+				 session_id = #{bean.sessionId},
+			</if>
+			<if test="bean.emotionType != null">
+				 emotion_type = #{bean.emotionType},
+			</if>
+			<if test="bean.emotionIntensity != null">
+				 emotion_intensity = #{bean.emotionIntensity},
+			</if>
+			<if test="bean.emotionTrigger != null">
+				 emotion_trigger = #{bean.emotionTrigger},
+			</if>
+			<if test="bean.sourceMessageId != null">
+				 source_message_id = #{bean.sourceMessageId},
+			</if>
+			<if test="bean.analysisMethod != null">
+				 analysis_method = #{bean.analysisMethod},
+			</if>
+			<if test="bean.confidence != null">
+				 confidence = #{bean.confidence},
+			</if>
+			<if test="bean.timeOfDay != null">
+				 time_of_day = #{bean.timeOfDay},
+			</if>
+			<if test="bean.isWeekend != null">
+				 is_weekend = #{bean.isWeekend},
+			</if>
+			<if test="bean.createTime != null">
+				 create_time = #{bean.createTime},
+			</if>
+ 		 </set>
+ 		 <include refid="query_condition" />
+	</update>
+
+	<!--多条件删除-->
+	<delete id="deleteByParam">
+		 delete b from bot_emotion_log b
+ 		 <include refid="query_condition" />
+	</delete>
+
+	<!-- 根据Id修改-->
+	<update id="updateById" parameterType="com.meetchat.entity.po.BotEmotionLog">
+		 UPDATE bot_emotion_log
+ 		 <set> 
+			<if test="bean.userId != null">
+				 user_id = #{bean.userId},
+			</if>
+			<if test="bean.botId != null">
+				 bot_id = #{bean.botId},
+			</if>
+			<if test="bean.sessionId != null">
+				 session_id = #{bean.sessionId},
+			</if>
+			<if test="bean.emotionType != null">
+				 emotion_type = #{bean.emotionType},
+			</if>
+			<if test="bean.emotionIntensity != null">
+				 emotion_intensity = #{bean.emotionIntensity},
+			</if>
+			<if test="bean.emotionTrigger != null">
+				 emotion_trigger = #{bean.emotionTrigger},
+			</if>
+			<if test="bean.sourceMessageId != null">
+				 source_message_id = #{bean.sourceMessageId},
+			</if>
+			<if test="bean.analysisMethod != null">
+				 analysis_method = #{bean.analysisMethod},
+			</if>
+			<if test="bean.confidence != null">
+				 confidence = #{bean.confidence},
+			</if>
+			<if test="bean.timeOfDay != null">
+				 time_of_day = #{bean.timeOfDay},
+			</if>
+			<if test="bean.isWeekend != null">
+				 is_weekend = #{bean.isWeekend},
+			</if>
+			<if test="bean.createTime != null">
+				 create_time = #{bean.createTime},
+			</if>
+ 		 </set>
+ 		 where id=#{id}
+	</update>
+
+	<!-- 根据Id删除-->
+	<delete id="deleteById">
+		delete from bot_emotion_log where id=#{id}
+	</delete>
+
+	<!-- 根据PrimaryKey获取对象-->
+	<select id="selectById" resultMap="base_result_map" >
+		select <include refid="base_column_list" /> from bot_emotion_log b where id=#{id}
+	</select>
+
+</mapper>

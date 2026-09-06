@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetchat.mappers.GroupInfoMapper">
+
+    <resultMap id="base_result_map" type="com.meetchat.entity.po.GroupInfo">
+        <result column="group_id" property="groupId" />
+        <result column="group_name" property="groupName" />
+        <result column="group_avatar" property="groupAvatar" />
+        <result column="owner_user_id" property="ownerUserId" />
+        <result column="invite_permission" property="invitePermission" />
+        <result column="announcement" property="announcement" />
+        <result column="status" property="status" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="member_role" property="memberRole" />
+    </resultMap>
+
+    <sql id="base_column_list">
+        g.group_id, g.group_name, g.group_avatar, g.owner_user_id,
+        g.invite_permission, g.announcement, g.status, g.create_time, g.update_time
+    </sql>
+
+    <select id="selectByGroupId" resultMap="base_result_map">
+        SELECT <include refid="base_column_list" />
+        FROM group_info g WHERE g.group_id = #{groupId}
+    </select>
+
+    <insert id="insert" parameterType="com.meetchat.entity.po.GroupInfo">
+        INSERT INTO group_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bean.groupId != null">group_id,</if>
+            <if test="bean.groupName != null">group_name,</if>
+            <if test="bean.groupAvatar != null">group_avatar,</if>
+            <if test="bean.ownerUserId != null">owner_user_id,</if>
+            <if test="bean.invitePermission != null">invite_permission,</if>
+            <if test="bean.announcement != null">announcement,</if>
+            <if test="bean.status != null">status,</if>
+            <if test="bean.createTime != null">create_time,</if>
+            <if test="bean.updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bean.groupId != null">#{bean.groupId},</if>
+            <if test="bean.groupName != null">#{bean.groupName},</if>
+            <if test="bean.groupAvatar != null">#{bean.groupAvatar},</if>
+            <if test="bean.ownerUserId != null">#{bean.ownerUserId},</if>
+            <if test="bean.invitePermission != null">#{bean.invitePermission},</if>
+            <if test="bean.announcement != null">#{bean.announcement},</if>
+            <if test="bean.status != null">#{bean.status},</if>
+            <if test="bean.createTime != null">#{bean.createTime},</if>
+            <if test="bean.updateTime != null">#{bean.updateTime},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertOrUpdate" parameterType="com.meetchat.entity.po.GroupInfo">
+        INSERT INTO group_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bean.groupId != null">group_id,</if>
+            <if test="bean.groupName != null">group_name,</if>
+            <if test="bean.groupAvatar != null">group_avatar,</if>
+            <if test="bean.ownerUserId != null">owner_user_id,</if>
+            <if test="bean.invitePermission != null">invite_permission,</if>
+            <if test="bean.announcement != null">announcement,</if>
+            <if test="bean.status != null">status,</if>
+            <if test="bean.createTime != null">create_time,</if>
+            <if test="bean.updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bean.groupId != null">#{bean.groupId},</if>
+            <if test="bean.groupName != null">#{bean.groupName},</if>
+            <if test="bean.groupAvatar != null">#{bean.groupAvatar},</if>
+            <if test="bean.ownerUserId != null">#{bean.ownerUserId},</if>
+            <if test="bean.invitePermission != null">#{bean.invitePermission},</if>
+            <if test="bean.announcement != null">#{bean.announcement},</if>
+            <if test="bean.status != null">#{bean.status},</if>
+            <if test="bean.createTime != null">#{bean.createTime},</if>
+            <if test="bean.updateTime != null">#{bean.updateTime},</if>
+        </trim>
+        ON DUPLICATE KEY UPDATE
+        <trim prefix="" suffix="" suffixOverrides=",">
+            <if test="bean.groupName != null">group_name = VALUES(group_name),</if>
+            <if test="bean.groupAvatar != null">group_avatar = VALUES(group_avatar),</if>
+            <if test="bean.ownerUserId != null">owner_user_id = VALUES(owner_user_id),</if>
+            <if test="bean.invitePermission != null">invite_permission = VALUES(invite_permission),</if>
+            <if test="bean.announcement != null">announcement = VALUES(announcement),</if>
+            <if test="bean.status != null">status = VALUES(status),</if>
+            <if test="bean.updateTime != null">update_time = VALUES(update_time),</if>
+        </trim>
+    </insert>
+
+    <insert id="insertBatch" parameterType="com.meetchat.entity.po.GroupInfo">
+        INSERT INTO group_info(group_id, group_name, group_avatar, owner_user_id,
+            invite_permission, announcement, status, create_time, update_time) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.groupId}, #{item.groupName}, #{item.groupAvatar}, #{item.ownerUserId},
+             #{item.invitePermission}, #{item.announcement}, #{item.status}, #{item.createTime}, #{item.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" parameterType="com.meetchat.entity.po.GroupInfo">
+        INSERT INTO group_info(group_id, group_name, group_avatar, owner_user_id,
+            invite_permission, announcement, status, create_time, update_time) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.groupId}, #{item.groupName}, #{item.groupAvatar}, #{item.ownerUserId},
+             #{item.invitePermission}, #{item.announcement}, #{item.status}, #{item.createTime}, #{item.updateTime})
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+            group_name = VALUES(group_name), group_avatar = VALUES(group_avatar),
+            owner_user_id = VALUES(owner_user_id), invite_permission = VALUES(invite_permission),
+            announcement = VALUES(announcement), status = VALUES(status), update_time = VALUES(update_time)
+    </insert>
+
+    <update id="updateByGroupId" parameterType="com.meetchat.entity.po.GroupInfo">
+        UPDATE group_info
+        <set>
+            <if test="bean.groupName != null">group_name = #{bean.groupName},</if>
+            <if test="bean.groupAvatar != null">group_avatar = #{bean.groupAvatar},</if>
+            <if test="bean.ownerUserId != null">owner_user_id = #{bean.ownerUserId},</if>
+            <if test="bean.invitePermission != null">invite_permission = #{bean.invitePermission},</if>
+            <if test="bean.announcement != null">announcement = #{bean.announcement},</if>
+            <if test="bean.status != null">status = #{bean.status},</if>
+            <if test="bean.updateTime != null">update_time = #{bean.updateTime},</if>
+        </set>
+        WHERE group_id = #{groupId}
+    </update>
+
+    <sql id="query_condition">
+        <where>
+            <if test="query.groupId != null and query.groupId != ''">AND g.group_id = #{query.groupId}</if>
+            <if test="query.groupName != null and query.groupName != ''">AND g.group_name = #{query.groupName}</if>
+            <if test="query.groupNameFuzzy != null and query.groupNameFuzzy != ''">AND g.group_name like concat('%', #{query.groupNameFuzzy}, '%')</if>
+            <if test="query.ownerUserId != null and query.ownerUserId != ''">AND g.owner_user_id = #{query.ownerUserId}</if>
+            <if test="query.status != null">AND g.status = #{query.status}</if>
+        </where>
+    </sql>
+
+    <select id="selectList" resultMap="base_result_map">
+        SELECT <include refid="base_column_list" /> FROM group_info g
+        <include refid="query_condition" />
+        <if test="query.orderBy != null and query.orderBy != ''">
+            order by ${query.orderBy}
+        </if>
+        <if test="query.simplePage != null">
+            limit #{query.simplePage.start},#{query.simplePage.end}
+        </if>
+    </select>
+
+    <select id="selectCount" resultType="java.lang.Integer">
+        SELECT count(1) FROM group_info g
+        <include refid="query_condition" />
+    </select>
+
+    <update id="updateByParam" parameterType="com.meetchat.entity.po.GroupInfo">
+        UPDATE group_info g
+        <set>
+            <if test="bean.groupName != null">group_name = #{bean.groupName},</if>
+            <if test="bean.groupAvatar != null">group_avatar = #{bean.groupAvatar},</if>
+            <if test="bean.ownerUserId != null">owner_user_id = #{bean.ownerUserId},</if>
+            <if test="bean.invitePermission != null">invite_permission = #{bean.invitePermission},</if>
+            <if test="bean.announcement != null">announcement = #{bean.announcement},</if>
+            <if test="bean.status != null">status = #{bean.status},</if>
+            <if test="bean.updateTime != null">update_time = #{bean.updateTime},</if>
+        </set>
+        <where>
+            <if test="query.groupId != null and query.groupId != ''">AND g.group_id = #{query.groupId}</if>
+            <if test="query.ownerUserId != null and query.ownerUserId != ''">AND g.owner_user_id = #{query.ownerUserId}</if>
+            <if test="query.status != null">AND g.status = #{query.status}</if>
+        </where>
+    </update>
+
+    <delete id="deleteByParam">
+        DELETE g FROM group_info g
+        <where>
+            <if test="query.groupId != null and query.groupId != ''">AND g.group_id = #{query.groupId}</if>
+            <if test="query.ownerUserId != null and query.ownerUserId != ''">AND g.owner_user_id = #{query.ownerUserId}</if>
+            <if test="query.status != null">AND g.status = #{query.status}</if>
+        </where>
+    </delete>
+
+</mapper>

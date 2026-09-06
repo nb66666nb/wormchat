@@ -1,0 +1,778 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meetchat.mappers.ChatImMessageMapper">
+
+	<!--实体映射-->
+	<resultMap id="base_result_map" type="com.meetchat.entity.po.ChatImMessage">
+		<!--主键ID-->
+		<id column="message_id" property="messageId"  />
+		<!--所属会话ID-->
+		<result column="session_id" property="sessionId"  />
+		<!--发送人用户ID-->
+		<result column="send_user_id" property="sendUserId"  />
+		<!--发送者显示名-->
+		<result column="send_user_name" property="sendUserName"  />
+		<!--发送者头像路径-->
+		<result column="send_user_avatar" property="sendUserAvatar"  />
+		<!--接收人用户ID（私聊时填充）-->
+		<result column="receive_user_id" property="receiveUserId"  />
+		<!--消息类型:30文字/32文件/33图片/34视频/35音频/36表情-->
+		<result column="message_type" property="messageType"  />
+		<!--消息内容（文字/JSON）-->
+		<result column="message_content" property="messageContent"  />
+		<!--文件名-->
+		<result column="file_name" property="fileName"  />
+		<!--文件大小(字节)-->
+		<result column="file_size" property="fileSize"  />
+		<!--文件ID-->
+		<result column="file_id" property="fileId"  />
+		<!--文件存储路径-->
+		<result column="file_path" property="filePath"  />
+		<!--MIME类型-->
+		<result column="content_type" property="contentType"  />
+		<!--文件类型标识-->
+		<result column="file_type" property="fileType"  />
+		<!--发送类型:0私聊 1群发-->
+		<result column="message_send_type" property="messageSendType"  />
+		<!--状态:0发送中 1已发送-->
+		<result column="status" property="status"  />
+		<!--发送时间戳(ms)-->
+		<result column="send_time" property="sendTime"  />
+		<!--前端唯一消息ID-->
+		<result column="message_only_id" property="messageOnlyId"  />
+		<!--送达状态:0待送达 1已送达 2已读-->
+		<result column="delivery_status" property="deliveryStatus"  />
+		<!--会话内服务端单调递增序号-->
+		<result column="session_seq" property="sessionSeq"  />
+		<!--是否已撤回:0正常 1已撤回-->
+		<result column="recalled" property="recalled"  />
+		<!--撤回时间戳-->
+		<result column="recall_time" property="recallTime"  />
+	</resultMap>
+
+
+	<!-- 通用查询结果列-->
+	<sql id="base_column_list">
+		 c.message_id,c.session_id,c.send_user_id,c.send_user_name,c.send_user_avatar,
+		 c.receive_user_id,c.message_type,c.message_content,c.file_name,c.file_size,
+		 c.file_id,c.file_path,c.content_type,c.file_type,c.message_send_type,
+		 c.status,c.send_time,c.message_only_id,c.delivery_status,c.session_seq,
+		 c.recalled,c.recall_time
+	</sql>
+
+	<sql id="base_condition_filed">
+			<if test="query.messageId != null">
+				 and  c.message_id = #{query.messageId}
+			</if>
+			<if test="query.sessionId != null and query.sessionId!=''">
+				 and  c.session_id = #{query.sessionId}
+			</if>
+			<if test="query.sendUserId != null and query.sendUserId!=''">
+				 and  c.send_user_id = #{query.sendUserId}
+			</if>
+			<if test="query.sendUserName != null and query.sendUserName!=''">
+				 and  c.send_user_name = #{query.sendUserName}
+			</if>
+			<if test="query.sendUserAvatar != null and query.sendUserAvatar!=''">
+				 and  c.send_user_avatar = #{query.sendUserAvatar}
+			</if>
+			<if test="query.receiveUserId != null and query.receiveUserId!=''">
+				 and  c.receive_user_id = #{query.receiveUserId}
+			</if>
+			<if test="query.messageType != null">
+				 and  c.message_type = #{query.messageType}
+			</if>
+			<if test="query.messageContent != null and query.messageContent!=''">
+				 and  c.message_content = #{query.messageContent}
+			</if>
+			<if test="query.fileName != null and query.fileName!=''">
+				 and  c.file_name = #{query.fileName}
+			</if>
+			<if test="query.fileSize != null">
+				 and  c.file_size = #{query.fileSize}
+			</if>
+			<if test="query.fileId != null and query.fileId!=''">
+				 and  c.file_id = #{query.fileId}
+			</if>
+			<if test="query.filePath != null and query.filePath!=''">
+				 and  c.file_path = #{query.filePath}
+			</if>
+			<if test="query.contentType != null and query.contentType!=''">
+				 and  c.content_type = #{query.contentType}
+			</if>
+			<if test="query.fileType != null">
+				 and  c.file_type = #{query.fileType}
+			</if>
+			<if test="query.messageSendType != null">
+				 and  c.message_send_type = #{query.messageSendType}
+			</if>
+			<if test="query.status != null">
+				 and  c.status = #{query.status}
+			</if>
+			<if test="query.sendTime != null">
+			 and  c.send_time = #{query.sendTime}
+		</if>
+		<if test="query.messageOnlyId != null and query.messageOnlyId!=''">
+			 and  c.message_only_id = #{query.messageOnlyId}
+		</if>
+		<if test="query.deliveryStatus != null">
+			 and  c.delivery_status = #{query.deliveryStatus}
+		</if>
+	</sql>
+
+	<!-- 通用查询条件列-->
+	<sql id="query_condition">
+	 <where>
+			<include refid="base_condition_filed" />
+			<if test="query.sessionIdFuzzy!= null  and query.sessionIdFuzzy!=''">
+				 and  c.session_id like concat('%', #{query.sessionIdFuzzy}, '%')
+			</if>
+			<if test="query.sendUserIdFuzzy!= null  and query.sendUserIdFuzzy!=''">
+				 and  c.send_user_id like concat('%', #{query.sendUserIdFuzzy}, '%')
+			</if>
+			<if test="query.sendUserNameFuzzy!= null  and query.sendUserNameFuzzy!=''">
+				 and  c.send_user_name like concat('%', #{query.sendUserNameFuzzy}, '%')
+			</if>
+			<if test="query.sendUserAvatarFuzzy!= null  and query.sendUserAvatarFuzzy!=''">
+				 and  c.send_user_avatar like concat('%', #{query.sendUserAvatarFuzzy}, '%')
+			</if>
+			<if test="query.receiveUserIdFuzzy!= null  and query.receiveUserIdFuzzy!=''">
+				 and  c.receive_user_id like concat('%', #{query.receiveUserIdFuzzy}, '%')
+			</if>
+			<if test="query.messageContentFuzzy!= null  and query.messageContentFuzzy!=''">
+				 and  c.message_content like concat('%', #{query.messageContentFuzzy}, '%')
+			</if>
+			<if test="query.fileNameFuzzy!= null  and query.fileNameFuzzy!=''">
+				 and  c.file_name like concat('%', #{query.fileNameFuzzy}, '%')
+			</if>
+			<if test="query.fileIdFuzzy!= null  and query.fileIdFuzzy!=''">
+				 and  c.file_id like concat('%', #{query.fileIdFuzzy}, '%')
+			</if>
+			<if test="query.filePathFuzzy!= null  and query.filePathFuzzy!=''">
+				 and  c.file_path like concat('%', #{query.filePathFuzzy}, '%')
+			</if>
+			<if test="query.contentTypeFuzzy!= null  and query.contentTypeFuzzy!=''">
+			 and  c.content_type like concat('%', #{query.contentTypeFuzzy}, '%')
+		</if>
+		<if test="query.messageOnlyIdFuzzy!= null  and query.messageOnlyIdFuzzy!=''">
+			 and  c.message_only_id like concat('%', #{query.messageOnlyIdFuzzy}, '%')
+		</if>
+	 </where>
+	</sql>
+
+	<!-- 查询集合-->
+	<select id="selectList" resultMap="base_result_map" >
+		 SELECT <include refid="base_column_list" /> FROM chat_im_message c <include refid="query_condition" />
+		 <if test="query.orderBy!=null">
+			 order by ${query.orderBy}
+		 </if>
+		 <if test="query.simplePage!=null">
+			 limit #{query.simplePage.start},#{query.simplePage.end}
+		 </if>
+	</select>
+
+	<!-- 查询数量-->
+	<select id="selectCount" resultType="java.lang.Integer" >
+		 SELECT count(1) FROM chat_im_message c <include refid="query_condition" />
+	</select>
+
+	<!-- 插入 （匹配有值的字段）-->
+	<!-- messageId 优先由应用层雪花算法生成并显式插入（分布式ID）；未设置时回落自增主键 -->
+	<insert id="insert" parameterType="com.meetchat.entity.po.ChatImMessage">
+		<selectKey keyProperty="bean.messageId" resultType="Long" order="AFTER">
+			SELECT IF(#{bean.messageId} IS NULL, LAST_INSERT_ID(), #{bean.messageId})
+		</selectKey>
+		 INSERT INTO chat_im_message
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="bean.messageId != null">
+				 message_id,
+			</if>
+			<if test="bean.sessionId != null">
+				 session_id,
+			</if>
+			<if test="bean.sendUserId != null">
+				 send_user_id,
+			</if>
+			<if test="bean.sendUserName != null">
+				 send_user_name,
+			</if>
+			<if test="bean.sendUserAvatar != null">
+				 send_user_avatar,
+			</if>
+			<if test="bean.receiveUserId != null">
+				 receive_user_id,
+			</if>
+			<if test="bean.messageType != null">
+				 message_type,
+			</if>
+			<if test="bean.messageContent != null">
+				 message_content,
+			</if>
+			<if test="bean.fileName != null">
+				 file_name,
+			</if>
+			<if test="bean.fileSize != null">
+				 file_size,
+			</if>
+			<if test="bean.fileId != null">
+				 file_id,
+			</if>
+			<if test="bean.filePath != null">
+				 file_path,
+			</if>
+			<if test="bean.contentType != null">
+				 content_type,
+			</if>
+			<if test="bean.fileType != null">
+				 file_type,
+			</if>
+			<if test="bean.messageSendType != null">
+				 message_send_type,
+			</if>
+			<if test="bean.status != null">
+				 status,
+			</if>
+			<if test="bean.sendTime != null">
+			 send_time,
+		</if>
+		<if test="bean.messageOnlyId != null">
+			 message_only_id,
+		</if>
+		<if test="bean.deliveryStatus != null">
+			 delivery_status,
+		</if>
+		<if test="bean.sessionSeq != null">
+			 session_seq,
+		</if>
+	 </trim>
+	 <trim prefix="values (" suffix=")" suffixOverrides="," >
+		<if test="bean.messageId!=null">
+			 #{bean.messageId},
+		</if>
+		<if test="bean.sessionId!=null">
+			 #{bean.sessionId},
+		</if>
+		<if test="bean.sendUserId!=null">
+			 #{bean.sendUserId},
+		</if>
+		<if test="bean.sendUserName!=null">
+			 #{bean.sendUserName},
+		</if>
+		<if test="bean.sendUserAvatar!=null">
+			 #{bean.sendUserAvatar},
+		</if>
+		<if test="bean.receiveUserId!=null">
+			 #{bean.receiveUserId},
+		</if>
+		<if test="bean.messageType!=null">
+			 #{bean.messageType},
+		</if>
+		<if test="bean.messageContent!=null">
+			 #{bean.messageContent},
+		</if>
+		<if test="bean.fileName!=null">
+			 #{bean.fileName},
+		</if>
+		<if test="bean.fileSize!=null">
+			 #{bean.fileSize},
+		</if>
+		<if test="bean.fileId!=null">
+			 #{bean.fileId},
+		</if>
+		<if test="bean.filePath!=null">
+			 #{bean.filePath},
+		</if>
+		<if test="bean.contentType!=null">
+			 #{bean.contentType},
+		</if>
+		<if test="bean.fileType!=null">
+			 #{bean.fileType},
+		</if>
+		<if test="bean.messageSendType!=null">
+			 #{bean.messageSendType},
+		</if>
+		<if test="bean.status!=null">
+			 #{bean.status},
+		</if>
+		<if test="bean.sendTime!=null">
+			 #{bean.sendTime},
+		</if>
+		<if test="bean.messageOnlyId!=null">
+			 #{bean.messageOnlyId},
+		</if>
+		<if test="bean.deliveryStatus!=null">
+			 #{bean.deliveryStatus},
+		</if>
+		<if test="bean.sessionSeq!=null">
+			 #{bean.sessionSeq},
+		</if>
+	 </trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段）-->
+	<insert id="insertOrUpdate" parameterType="com.meetchat.entity.po.ChatImMessage">
+		 INSERT INTO chat_im_message
+		 <trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.messageId != null">
+				 message_id,
+			</if>
+			<if test="bean.sessionId != null">
+				 session_id,
+			</if>
+			<if test="bean.sendUserId != null">
+				 send_user_id,
+			</if>
+			<if test="bean.sendUserName != null">
+				 send_user_name,
+			</if>
+			<if test="bean.sendUserAvatar != null">
+				 send_user_avatar,
+			</if>
+			<if test="bean.receiveUserId != null">
+				 receive_user_id,
+			</if>
+			<if test="bean.messageType != null">
+				 message_type,
+			</if>
+			<if test="bean.messageContent != null">
+				 message_content,
+			</if>
+			<if test="bean.fileName != null">
+				 file_name,
+			</if>
+			<if test="bean.fileSize != null">
+				 file_size,
+			</if>
+			<if test="bean.fileId != null">
+				 file_id,
+			</if>
+			<if test="bean.filePath != null">
+				 file_path,
+			</if>
+			<if test="bean.contentType != null">
+				 content_type,
+			</if>
+			<if test="bean.fileType != null">
+				 file_type,
+			</if>
+			<if test="bean.messageSendType != null">
+				 message_send_type,
+			</if>
+			<if test="bean.status != null">
+				 status,
+			</if>
+			<if test="bean.sendTime != null">
+			 send_time,
+		</if>
+		<if test="bean.messageOnlyId != null">
+			 message_only_id,
+		</if>
+		<if test="bean.deliveryStatus != null">
+			 delivery_status,
+		</if>
+	 </trim>
+	 <trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="bean.messageId!=null">
+			 #{bean.messageId},
+		</if>
+		<if test="bean.sessionId!=null">
+			 #{bean.sessionId},
+		</if>
+		<if test="bean.sendUserId!=null">
+			 #{bean.sendUserId},
+		</if>
+		<if test="bean.sendUserName!=null">
+			 #{bean.sendUserName},
+		</if>
+		<if test="bean.sendUserAvatar!=null">
+			 #{bean.sendUserAvatar},
+		</if>
+		<if test="bean.receiveUserId!=null">
+			 #{bean.receiveUserId},
+		</if>
+		<if test="bean.messageType!=null">
+			 #{bean.messageType},
+		</if>
+		<if test="bean.messageContent!=null">
+			 #{bean.messageContent},
+		</if>
+		<if test="bean.fileName!=null">
+			 #{bean.fileName},
+		</if>
+		<if test="bean.fileSize!=null">
+			 #{bean.fileSize},
+		</if>
+		<if test="bean.fileId!=null">
+			 #{bean.fileId},
+		</if>
+		<if test="bean.filePath!=null">
+			 #{bean.filePath},
+		</if>
+		<if test="bean.contentType!=null">
+			 #{bean.contentType},
+		</if>
+		<if test="bean.fileType!=null">
+			 #{bean.fileType},
+		</if>
+		<if test="bean.messageSendType!=null">
+			 #{bean.messageSendType},
+		</if>
+		<if test="bean.status!=null">
+			 #{bean.status},
+		</if>
+		<if test="bean.sendTime!=null">
+			 #{bean.sendTime},
+		</if>
+		<if test="bean.messageOnlyId!=null">
+			 #{bean.messageOnlyId},
+		</if>
+		<if test="bean.deliveryStatus!=null">
+			 #{bean.deliveryStatus},
+		</if>
+	 </trim>
+	 on DUPLICATE key update 
+		 <trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.sessionId!=null">
+				 session_id = VALUES(session_id),
+			</if>
+			<if test="bean.sendUserId!=null">
+				 send_user_id = VALUES(send_user_id),
+			</if>
+			<if test="bean.sendUserName!=null">
+				 send_user_name = VALUES(send_user_name),
+			</if>
+			<if test="bean.sendUserAvatar!=null">
+				 send_user_avatar = VALUES(send_user_avatar),
+			</if>
+			<if test="bean.receiveUserId!=null">
+				 receive_user_id = VALUES(receive_user_id),
+			</if>
+			<if test="bean.messageType!=null">
+				 message_type = VALUES(message_type),
+			</if>
+			<if test="bean.messageContent!=null">
+				 message_content = VALUES(message_content),
+			</if>
+			<if test="bean.fileName!=null">
+				 file_name = VALUES(file_name),
+			</if>
+			<if test="bean.fileSize!=null">
+				 file_size = VALUES(file_size),
+			</if>
+			<if test="bean.fileId!=null">
+				 file_id = VALUES(file_id),
+			</if>
+			<if test="bean.filePath!=null">
+				 file_path = VALUES(file_path),
+			</if>
+			<if test="bean.contentType!=null">
+				 content_type = VALUES(content_type),
+			</if>
+			<if test="bean.fileType!=null">
+				 file_type = VALUES(file_type),
+			</if>
+			<if test="bean.messageSendType!=null">
+				 message_send_type = VALUES(message_send_type),
+			</if>
+			<if test="bean.status!=null">
+				 status = VALUES(status),
+			</if>
+			<if test="bean.sendTime!=null">
+			 send_time = VALUES(send_time),
+		</if>
+		<if test="bean.messageOnlyId!=null">
+			 message_only_id = VALUES(message_only_id),
+		</if>
+		<if test="bean.deliveryStatus!=null">
+			 delivery_status = VALUES(delivery_status),
+		</if>
+	 </trim>
+	</insert>
+
+	<!-- 添加 （批量插入）-->
+	<insert id="insertBatch" parameterType="com.meetchat.entity.po.ChatImMessage" useGeneratedKeys="true" keyProperty="messageId">
+		 INSERT INTO chat_im_message(
+			 session_id,
+			 send_user_id,
+			 send_user_name,
+			 send_user_avatar,
+			 receive_user_id,
+			 message_type,
+			 message_content,
+			 file_name,
+			 file_size,
+			 file_id,
+			 file_path,
+			 content_type,
+			 file_type,
+			 message_send_type,
+			 status,
+			 send_time,
+			 message_only_id,
+			 delivery_status
+		 )values
+		 <foreach collection="list" item="item" separator=",">
+			 (
+				 #{item.sessionId},
+				 #{item.sendUserId},
+				 #{item.sendUserName},
+				 #{item.sendUserAvatar},
+				 #{item.receiveUserId},
+				 #{item.messageType},
+				 #{item.messageContent},
+				 #{item.fileName},
+				 #{item.fileSize},
+				 #{item.fileId},
+				 #{item.filePath},
+				 #{item.contentType},
+				 #{item.fileType},
+				 #{item.messageSendType},
+				 #{item.status},
+				 #{item.sendTime},
+				 #{item.messageOnlyId},
+				 #{item.deliveryStatus}
+			 )
+		 </foreach>
+	</insert>
+
+	<!-- 批量新增修改 （批量插入）-->
+	<insert id="insertOrUpdateBatch" parameterType="com.meetchat.entity.po.ChatImMessage">
+		 INSERT INTO chat_im_message(
+			 session_id,
+			 send_user_id,
+			 send_user_name,
+			 send_user_avatar,
+			 receive_user_id,
+			 message_type,
+			 message_content,
+			 file_name,
+			 file_size,
+			 file_id,
+			 file_path,
+			 content_type,
+			 file_type,
+			 message_send_type,
+			 status,
+			 send_time,
+			 message_only_id,
+			 delivery_status
+		 )values
+		 <foreach collection="list" item="item" separator=",">
+			 (
+				 #{item.sessionId},
+				 #{item.sendUserId},
+				 #{item.sendUserName},
+				 #{item.sendUserAvatar},
+				 #{item.receiveUserId},
+				 #{item.messageType},
+				 #{item.messageContent},
+				 #{item.fileName},
+				 #{item.fileSize},
+				 #{item.fileId},
+				 #{item.filePath},
+				 #{item.contentType},
+				 #{item.fileType},
+				 #{item.messageSendType},
+				 #{item.status},
+				 #{item.sendTime},
+				 #{item.messageOnlyId},
+				 #{item.deliveryStatus}
+			 )
+		 </foreach>
+			on DUPLICATE key update
+			session_id = VALUES(session_id),
+			send_user_id = VALUES(send_user_id),
+			send_user_name = VALUES(send_user_name),
+			send_user_avatar = VALUES(send_user_avatar),
+			receive_user_id = VALUES(receive_user_id),
+			message_type = VALUES(message_type),
+			message_content = VALUES(message_content),
+			file_name = VALUES(file_name),
+			file_size = VALUES(file_size),
+			file_id = VALUES(file_id),
+			file_path = VALUES(file_path),
+			content_type = VALUES(content_type),
+			file_type = VALUES(file_type),
+			message_send_type = VALUES(message_send_type),
+			status = VALUES(status),
+			send_time = VALUES(send_time),
+			message_only_id = VALUES(message_only_id),
+			delivery_status = VALUES(delivery_status)
+	</insert>
+
+	<!--多条件修改-->
+	<update id="updateByParam" parameterType="com.meetchat.entity.query.ChatImMessageQuery">
+		 UPDATE chat_im_message c
+ 		 <set> 
+			<if test="bean.sessionId != null">
+				 session_id = #{bean.sessionId},
+			</if>
+			<if test="bean.sendUserId != null">
+				 send_user_id = #{bean.sendUserId},
+			</if>
+			<if test="bean.sendUserName != null">
+				 send_user_name = #{bean.sendUserName},
+			</if>
+			<if test="bean.sendUserAvatar != null">
+				 send_user_avatar = #{bean.sendUserAvatar},
+			</if>
+			<if test="bean.receiveUserId != null">
+				 receive_user_id = #{bean.receiveUserId},
+			</if>
+			<if test="bean.messageType != null">
+				 message_type = #{bean.messageType},
+			</if>
+			<if test="bean.messageContent != null">
+				 message_content = #{bean.messageContent},
+			</if>
+			<if test="bean.fileName != null">
+				 file_name = #{bean.fileName},
+			</if>
+			<if test="bean.fileSize != null">
+				 file_size = #{bean.fileSize},
+			</if>
+			<if test="bean.fileId != null">
+				 file_id = #{bean.fileId},
+			</if>
+			<if test="bean.filePath != null">
+				 file_path = #{bean.filePath},
+			</if>
+			<if test="bean.contentType != null">
+				 content_type = #{bean.contentType},
+			</if>
+			<if test="bean.fileType != null">
+				 file_type = #{bean.fileType},
+			</if>
+			<if test="bean.messageSendType != null">
+				 message_send_type = #{bean.messageSendType},
+			</if>
+			<if test="bean.status != null">
+				 status = #{bean.status},
+			</if>
+			<if test="bean.sendTime != null">
+			 send_time = #{bean.sendTime},
+		</if>
+		<if test="bean.messageOnlyId != null">
+			 message_only_id = #{bean.messageOnlyId},
+		</if>
+		<if test="bean.deliveryStatus != null">
+			 delivery_status = #{bean.deliveryStatus},
+		</if>
+ 	 </set>
+ 	 <include refid="query_condition" />
+	</update>
+
+	<!--多条件删除-->
+	<delete id="deleteByParam">
+		 delete c from chat_im_message c
+ 		 <include refid="query_condition" />
+	</delete>
+
+	<!-- 根据MessageId修改-->
+	<update id="updateByMessageId" parameterType="com.meetchat.entity.po.ChatImMessage">
+		 UPDATE chat_im_message
+ 		 <set> 
+			<if test="bean.sessionId != null">
+				 session_id = #{bean.sessionId},
+			</if>
+			<if test="bean.sendUserId != null">
+				 send_user_id = #{bean.sendUserId},
+			</if>
+			<if test="bean.sendUserName != null">
+				 send_user_name = #{bean.sendUserName},
+			</if>
+			<if test="bean.sendUserAvatar != null">
+				 send_user_avatar = #{bean.sendUserAvatar},
+			</if>
+			<if test="bean.receiveUserId != null">
+				 receive_user_id = #{bean.receiveUserId},
+			</if>
+			<if test="bean.messageType != null">
+				 message_type = #{bean.messageType},
+			</if>
+			<if test="bean.messageContent != null">
+				 message_content = #{bean.messageContent},
+			</if>
+			<if test="bean.fileName != null">
+				 file_name = #{bean.fileName},
+			</if>
+			<if test="bean.fileSize != null">
+				 file_size = #{bean.fileSize},
+			</if>
+			<if test="bean.fileId != null">
+				 file_id = #{bean.fileId},
+			</if>
+			<if test="bean.filePath != null">
+				 file_path = #{bean.filePath},
+			</if>
+			<if test="bean.contentType != null">
+				 content_type = #{bean.contentType},
+			</if>
+			<if test="bean.fileType != null">
+				 file_type = #{bean.fileType},
+			</if>
+			<if test="bean.messageSendType != null">
+				 message_send_type = #{bean.messageSendType},
+			</if>
+			<if test="bean.status != null">
+				 status = #{bean.status},
+			</if>
+			<if test="bean.sendTime != null">
+			 send_time = #{bean.sendTime},
+		</if>
+		<if test="bean.messageOnlyId != null">
+			 message_only_id = #{bean.messageOnlyId},
+		</if>
+		<if test="bean.deliveryStatus != null">
+			 delivery_status = #{bean.deliveryStatus},
+		</if>
+		<if test="bean.recalled != null">
+			 recalled = #{bean.recalled},
+		</if>
+		<if test="bean.recallTime != null">
+			 recall_time = #{bean.recallTime},
+		</if>
+ 	 </set>
+ 	 where message_id=#{messageId}
+	</update>
+
+	<!-- 根据MessageId删除-->
+	<delete id="deleteByMessageId">
+		delete from chat_im_message where message_id=#{messageId}
+	</delete>
+
+	<!-- 根据PrimaryKey获取对象-->
+	<select id="selectByMessageId" resultMap="base_result_map" >
+		select <include refid="base_column_list" /> from chat_im_message c where message_id=#{messageId}
+	</select>
+
+	<!-- 根据MessageOnlyId获取对象（幂等校验用）-->
+	<select id="selectByMessageOnlyId" resultMap="base_result_map" >
+		select <include refid="base_column_list" /> from chat_im_message c where message_only_id=#{messageOnlyId} limit 1
+	</select>
+
+	<!-- 增量拉取：接收用户 messageId > lastMessageId 的所有消息 -->
+	<select id="selectAfterId" resultMap="base_result_map" >
+		select <include refid="base_column_list" /> from chat_im_message c
+		where c.receive_user_id = #{receiveUserId}
+		<if test="lastMessageId != null and lastMessageId > 0">
+			and c.message_id > #{lastMessageId}
+		</if>
+		order by c.message_id asc
+		limit #{pageSize}
+	</select>
+
+	<!-- 群消息增量拉取：receive_user_id IN (groupIds) 且 messageId > lastMessageId -->
+	<select id="selectGroupMessagesAfterIds" resultMap="base_result_map" >
+		select <include refid="base_column_list" /> from chat_im_message c
+		where c.receive_user_id in
+		<foreach collection="groupIds" item="gid" open="(" separator="," close=")">#{gid}</foreach>
+		<if test="lastMessageId != null and lastMessageId > 0">
+			and c.message_id > #{lastMessageId}
+		</if>
+		order by c.message_id asc
+		limit #{pageSize}
+	</select>
+
+</mapper>
