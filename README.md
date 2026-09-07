@@ -23,9 +23,11 @@ https://github.com/nb66666nb/wormchat/blob/main/docs/demo/wormchat-demo.mp4
 
 **客户端界面预览：**
 
-| 登录 | 消息 | 会议 | 机器人 |
-|:---:|:---:|:---:|:---:|
-| ![](docs/images/login.png) | ![](docs/images/chat.png) | ![](docs/images/meeting.png) | ![](docs/images/robot.png) |
+| 登录页 |
+|:---:|
+| ![](docs/images/login.png) |
+
+<!-- 后续可补充：消息页 docs/images/chat.png、会议页 docs/images/meeting.png、机器人页 docs/images/robot.png -->
 
 ## 系统架构
 
