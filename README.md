@@ -19,15 +19,28 @@
 
 **客户端界面预览：**
 
-| 登录页 | 私聊 / 消息页 | 群聊聊天面板 |
-|:---:|:---:|:---:|
-| ![](docs/images/login.png) | ![](docs/images/chat.png) | ![](docs/images/group-chat.png) |
-| 通讯录（搜索用户） | 我的好友 | 群聊设置 |
-| ![](docs/images/contact.png) | ![](docs/images/friends.png) | ![](docs/images/group-settings.png) |
-| 创建群聊 | 机器人聊天面板 | 机器人创建设置 |
-| ![](docs/images/group-create.png) | ![](docs/images/robot-chat.png) | ![](docs/images/robot-create.png) |
-| 创建通话 | 通话室窗口 | 通话记录 |
-| ![](docs/images/call-create.png) | ![](docs/images/call-room.png) | ![](docs/images/call-history.png) |
+<table>
+  <tr>
+    <td align="center">登录页<br/><img src="docs/images/login.png" width="230"/></td>
+    <td align="center">私聊 / 消息页<br/><img src="docs/images/chat.png" width="330"/></td>
+    <td align="center">群聊聊天面板<br/><img src="docs/images/group-chat.png" width="330"/></td>
+  </tr>
+  <tr>
+    <td align="center">通讯录（搜索用户）<br/><img src="docs/images/contact.png" width="330"/></td>
+    <td align="center">我的好友<br/><img src="docs/images/friends.png" width="330"/></td>
+    <td align="center">群聊设置<br/><img src="docs/images/group-settings.png" width="230"/></td>
+  </tr>
+  <tr>
+    <td align="center">创建群聊<br/><img src="docs/images/group-create.png" width="230"/></td>
+    <td align="center">机器人聊天面板<br/><img src="docs/images/robot-chat.png" width="330"/></td>
+    <td align="center">机器人创建设置<br/><img src="docs/images/robot-create.png" width="280"/></td>
+  </tr>
+  <tr>
+    <td align="center">创建通话<br/><img src="docs/images/call-create.png" width="330"/></td>
+    <td align="center">通话室窗口<br/><img src="docs/images/call-room.png" width="330"/></td>
+    <td align="center">通话记录<br/><img src="docs/images/call-history.png" width="330"/></td>
+  </tr>
+</table>
 
 ## 系统架构
 
