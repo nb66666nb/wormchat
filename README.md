@@ -17,14 +17,9 @@
 
 ## 功能演示
 
-> 录屏文件已放入 `docs/demo/`（本地不删可传仓库，或用下方 GitHub 附件链接）
+**完整功能演示视频**（单聊 / 群聊 / AI 机器人 / 多人视频会议 / 管理后台，约 9 分钟）：
 
-| 功能 | 演示 |
-|------|------|
-| IM 单聊 / 群聊 | `docs/demo/chat.mp4` |
-| AI 机器人对话 | `docs/demo/robot.mp4` |
-| 多人视频会议 | `docs/demo/meeting.mp4` |
-| 管理后台 | `docs/demo/admin.mp4` |
+https://github.com/nb66666nb/wormchat/blob/main/docs/demo/wormchat-demo.mp4
 
 **客户端界面预览：**
 
