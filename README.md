@@ -17,10 +17,6 @@
 
 ## 功能演示
 
-**完整功能演示视频**（单聊 / 群聊 / AI 机器人 / 多人视频会议 / 管理后台，约 9 分钟）：
-
-https://github.com/nb66666nb/wormchat/blob/main/docs/demo/wormchat-demo.mp4
-
 **客户端界面预览：**
 
 | 登录页 |
