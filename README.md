@@ -22,6 +22,8 @@
 | 登录页 | 私聊 / 消息页 |
 |:---:|:---:|
 | ![](docs/images/login.png) | ![](docs/images/chat.png) |
+| 通讯录（搜索用户） | 我的好友 |
+| ![](docs/images/contact.png) | ![](docs/images/friends.png) |
 
 <!-- 后续可补充：会议页 docs/images/meeting.png、机器人页 docs/images/robot.png -->
 
