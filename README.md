@@ -19,11 +19,11 @@
 
 **客户端界面预览：**
 
-| 登录页 |
-|:---:|
-| ![](docs/images/login.png) |
+| 登录页 | 私聊 / 消息页 |
+|:---:|:---:|
+| ![](docs/images/login.png) | ![](docs/images/chat.png) |
 
-<!-- 后续可补充：消息页 docs/images/chat.png、会议页 docs/images/meeting.png、机器人页 docs/images/robot.png -->
+<!-- 后续可补充：会议页 docs/images/meeting.png、机器人页 docs/images/robot.png -->
 
 ## 系统架构
 
