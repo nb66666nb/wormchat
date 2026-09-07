@@ -26,8 +26,8 @@
 | ![](docs/images/contact.png) | ![](docs/images/friends.png) | ![](docs/images/group-settings.png) |
 | 创建群聊 | 机器人聊天面板 | 机器人创建设置 |
 | ![](docs/images/group-create.png) | ![](docs/images/robot-chat.png) | ![](docs/images/robot-create.png) |
-
-<!-- 后续可补充：会议页 docs/images/meeting.png -->
+| 创建通话 | 通话室窗口 | 通话记录 |
+| ![](docs/images/call-create.png) | ![](docs/images/call-room.png) | ![](docs/images/call-history.png) |
 
 ## 系统架构
 
