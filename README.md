@@ -24,10 +24,10 @@
 | ![](docs/images/login.png) | ![](docs/images/chat.png) | ![](docs/images/group-chat.png) |
 | 通讯录（搜索用户） | 我的好友 | 群聊设置 |
 | ![](docs/images/contact.png) | ![](docs/images/friends.png) | ![](docs/images/group-settings.png) |
-| 创建群聊 | | |
-| ![](docs/images/group-create.png) | | |
+| 创建群聊 | 机器人聊天面板 | 机器人创建设置 |
+| ![](docs/images/group-create.png) | ![](docs/images/robot-chat.png) | ![](docs/images/robot-create.png) |
 
-<!-- 后续可补充：会议页 docs/images/meeting.png、机器人页 docs/images/robot.png -->
+<!-- 后续可补充：会议页 docs/images/meeting.png -->
 
 ## 系统架构
 
